@@ -1,0 +1,1486 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Stevo — The Private Crew App</title>
+<meta name="description" content="Stevo is the private crew app for guys. Social bets, poker nights, golf, and more — all in one place for your crew.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Chakra+Petch:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0A0A10;
+    --surface: #111118;
+    --surface2: #1A1A22;
+    --border: #28283A;
+    --accent: #2563EB;
+    --accent-hover: #1D4ED8;
+    --red: #EF4444;
+    --blue: #3B82F6;
+    --purple: #8B5CF6;
+    --gold: #FBBF24;
+    --text: #E2E8F0;
+    --text2: #94A3B8;
+    --text3: #475569;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Chakra Petch', sans-serif;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* ── SCROLL REVEAL ── */
+  .reveal {
+    opacity: 0;
+    transform: translateY(24px);
+    transition: opacity 0.6s ease, transform 0.6s ease;
+  }
+  .reveal.visible { opacity: 1; transform: translateY(0); }
+  .reveal-d1 { transition-delay: 0.08s; }
+  .reveal-d2 { transition-delay: 0.16s; }
+  .reveal-d3 { transition-delay: 0.24s; }
+  .reveal-d4 { transition-delay: 0.32s; }
+
+  @media (prefers-reduced-motion: reduce) {
+    .reveal { opacity: 1; transform: none; transition: none; }
+  }
+
+  /* ── NAV ── */
+  nav {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 100;
+    padding: 16px 40px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: rgba(11,17,32,0.85);
+    backdrop-filter: blur(16px);
+    border-bottom: 1px solid rgba(255,255,255,0.04);
+  }
+
+  .nav-left {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    text-decoration: none;
+  }
+  .nav-left img {
+    width: 32px; height: 32px;
+    border-radius: 6px;
+  }
+  .nav-wordmark {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 24px;
+    letter-spacing: 3px;
+    color: var(--text);
+  }
+
+  .nav-right {
+    display: flex;
+    gap: 28px;
+    align-items: center;
+  }
+  .nav-right a {
+    color: var(--text2);
+    text-decoration: none;
+    font-size: 14px;
+    font-weight: 500;
+    transition: color 0.2s;
+  }
+  .nav-right a:hover { color: var(--text); }
+  .nav-cta {
+    background: var(--accent);
+    color: #fff !important;
+    padding: 9px 20px;
+    border-radius: 8px;
+    font-weight: 700;
+    font-size: 13px;
+    transition: background 0.2s;
+  }
+  .nav-cta:hover { background: var(--accent-hover); }
+
+  /* Focus */
+  a:focus-visible, button:focus-visible, input:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 2px;
+  }
+
+  /* ── HERO ── */
+  .hero {
+    max-width: 1120px;
+    margin: 0 auto;
+    padding: 140px 40px 100px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 80px;
+    align-items: center;
+  }
+
+  .hero-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: rgba(245,158,11,0.08);
+    border: 1px solid rgba(245,158,11,0.2);
+    border-radius: 6px;
+    padding: 5px 12px;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 24px;
+  }
+  .hero-badge::before {
+    content: '';
+    width: 6px; height: 6px;
+    background: var(--accent);
+    border-radius: 50%;
+  }
+
+  .hero-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(56px, 7vw, 88px);
+    line-height: 0.92;
+    letter-spacing: 2px;
+    margin-bottom: 20px;
+  }
+  .hero-title-accent {
+    color: var(--accent);
+  }
+
+  .hero-sub {
+    font-size: 16px;
+    color: var(--text2);
+    line-height: 1.7;
+    margin-bottom: 36px;
+    max-width: 420px;
+  }
+
+  .hero-form {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 12px;
+  }
+  .hero-input {
+    flex: 1;
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 14px 16px;
+    color: var(--text);
+    font-family: 'Chakra Petch', sans-serif;
+    font-size: 14px;
+    outline: none;
+    transition: border-color 0.2s;
+  }
+  .hero-input:focus { border-color: var(--accent); }
+  .hero-input::placeholder { color: var(--text3); }
+
+  .hero-btn {
+    background: var(--accent);
+    color: #fff;
+    border: none;
+    border-radius: 8px;
+    padding: 14px 24px;
+    font-family: 'Chakra Petch', sans-serif;
+    font-size: 14px;
+    font-weight: 700;
+    cursor: pointer;
+    white-space: nowrap;
+    transition: background 0.2s;
+  }
+  .hero-btn:hover { background: var(--accent-hover); }
+
+  .hero-note {
+    font-size: 12px;
+    color: var(--text3);
+  }
+
+  .hero-success {
+    display: none;
+    background: rgba(245,158,11,0.08);
+    border: 1px solid rgba(245,158,11,0.2);
+    border-radius: 8px;
+    padding: 14px 16px;
+    color: var(--accent);
+    font-weight: 600;
+    font-size: 14px;
+  }
+
+  .hero-proof {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-top: 20px;
+  }
+  .hero-proof-avatars {
+    display: flex;
+  }
+  .hero-proof-avatars span {
+    width: 28px; height: 28px;
+    border-radius: 50%;
+    border: 2px solid var(--bg);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 11px;
+    font-weight: 700;
+    color: #000;
+    margin-left: -6px;
+  }
+  .hero-proof-avatars span:first-child { margin-left: 0; }
+  .hero-proof-text {
+    font-size: 13px;
+    color: var(--text2);
+  }
+  .hero-proof-text strong { color: var(--text); }
+
+  .hero-socials {
+    display: flex;
+    gap: 8px;
+    margin-top: 28px;
+  }
+  .hero-socials a {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 36px; height: 36px;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    color: var(--text3);
+    text-decoration: none;
+    transition: color 0.2s, border-color 0.2s;
+  }
+  .hero-socials a:hover {
+    color: var(--text2);
+    border-color: var(--text3);
+  }
+
+  /* Phone mockup */
+  .hero-phone {
+    display: flex;
+    justify-content: center;
+  }
+  .phone {
+    width: 280px;
+    background: var(--surface);
+    border-radius: 36px;
+    border: 1.5px solid var(--border);
+    overflow: hidden;
+    box-shadow: 0 40px 80px rgba(0,0,0,0.4);
+  }
+  .phone-notch {
+    width: 100px; height: 26px;
+    background: var(--bg);
+    border-radius: 0 0 14px 14px;
+    margin: 0 auto;
+  }
+  .phone-screen { padding: 14px; }
+
+  .phone-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 14px;
+  }
+  .phone-logo {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 20px;
+    letter-spacing: 2px;
+    color: var(--text);
+  }
+  .phone-crew-label {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 3px 10px;
+    font-size: 11px;
+    color: var(--text2);
+  }
+
+  .phone-stats {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 6px;
+    margin-bottom: 12px;
+  }
+  .phone-stat {
+    background: var(--surface2);
+    border-radius: 10px;
+    padding: 10px 4px;
+    text-align: center;
+  }
+  .phone-stat-val {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 18px;
+  }
+  .phone-stat-val.green { color: #22C55E; }
+  .phone-stat-val.red { color: var(--red); }
+  .phone-stat-val.amber { color: var(--accent); }
+  .phone-stat-lbl {
+    font-size: 9px;
+    color: var(--text3);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-top: 2px;
+  }
+
+  .phone-card {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 11px;
+    margin-bottom: 6px;
+  }
+  .phone-card-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 4px;
+  }
+  .phone-card-name { font-size: 12px; font-weight: 600; }
+  .phone-card-tag {
+    font-size: 9px;
+    font-weight: 700;
+    padding: 2px 7px;
+    border-radius: 6px;
+  }
+  .phone-card-tag.active { background: rgba(34,197,94,0.12); color: #22C55E; }
+  .phone-card-tag.date { background: rgba(139,92,246,0.12); color: var(--purple); }
+  .phone-card-tag.golf { background: rgba(59,130,246,0.12); color: var(--blue); }
+  .phone-card-desc { font-size: 11px; color: var(--text2); margin-bottom: 6px; }
+  .phone-card-foot {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .phone-card-amt {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 15px;
+    color: var(--text);
+  }
+  .phone-card-meta { font-size: 9px; color: var(--text3); }
+  .phone-card-check { font-size: 10px; color: #22C55E; font-weight: 700; }
+
+  .phone-nav {
+    display: flex;
+    justify-content: space-around;
+    padding: 10px 0 4px;
+    border-top: 1px solid var(--border);
+    margin-top: 6px;
+  }
+  .phone-nav svg { opacity: 0.3; }
+  .phone-nav svg.active { opacity: 0.9; }
+
+  /* ── SECTION SHARED ── */
+  .section-tag {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 12px;
+  }
+  .section-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(36px, 4.5vw, 56px);
+    line-height: 1;
+    letter-spacing: 1px;
+    margin-bottom: 16px;
+  }
+  .section-desc {
+    color: var(--text2);
+    font-size: 15px;
+    line-height: 1.7;
+    max-width: 480px;
+  }
+
+  /* ── PROBLEM ── */
+  .problem {
+    max-width: 1120px;
+    margin: 0 auto;
+    padding: 100px 40px;
+  }
+  .problem-grid {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 12px;
+    margin-top: 40px;
+  }
+  .problem-item {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 20px;
+  }
+  .problem-item svg { margin-bottom: 12px; }
+  .problem-item-name { font-size: 13px; font-weight: 600; margin-bottom: 4px; }
+  .problem-item-desc { font-size: 12px; color: var(--text2); line-height: 1.5; }
+
+  /* ── FEATURES ── */
+  .features {
+    border-top: 1px solid var(--border);
+    border-bottom: 1px solid var(--border);
+    background: var(--surface);
+  }
+  .features-inner {
+    max-width: 1120px;
+    margin: 0 auto;
+    padding: 100px 40px;
+  }
+  .features-head {
+    text-align: center;
+    margin-bottom: 56px;
+  }
+  .features-head .section-desc { margin: 0 auto; }
+
+  .features-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+  }
+  .f-card {
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 28px 24px;
+    transition: border-color 0.2s;
+  }
+  .f-card:hover { border-color: var(--text3); }
+
+  .f-card-top {
+    width: 3px;
+    height: 24px;
+    border-radius: 2px;
+    margin-bottom: 20px;
+  }
+  .f-card-top.amber { background: var(--accent); }
+  .f-card-top.purple { background: var(--purple); }
+  .f-card-top.blue { background: var(--blue); }
+
+  .f-card-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 24px;
+    letter-spacing: 1px;
+    margin-bottom: 10px;
+  }
+  .f-card-desc {
+    font-size: 13px;
+    color: var(--text2);
+    line-height: 1.7;
+    margin-bottom: 18px;
+  }
+  .f-card-list {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+  .f-card-list li {
+    font-size: 13px;
+    color: var(--text2);
+    padding-left: 16px;
+    position: relative;
+  }
+  .f-card-list li::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 7px;
+    width: 4px; height: 4px;
+    border-radius: 50%;
+    background: var(--text3);
+  }
+
+  /* ── HOW IT WORKS ── */
+  .how {
+    max-width: 1120px;
+    margin: 0 auto;
+    padding: 100px 40px;
+  }
+  .how-head {
+    text-align: center;
+    margin-bottom: 56px;
+  }
+  .how-head .section-desc { margin: 0 auto; }
+
+  .how-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 20px;
+  }
+  .how-step {
+    text-align: center;
+  }
+  .how-num {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 32px;
+    color: var(--accent);
+    margin-bottom: 12px;
+  }
+  .how-step-title {
+    font-weight: 600;
+    font-size: 15px;
+    margin-bottom: 6px;
+  }
+  .how-step-desc {
+    font-size: 13px;
+    color: var(--text2);
+    line-height: 1.5;
+  }
+
+  /* ── STATS ── */
+  .stats {
+    border-top: 1px solid var(--border);
+    border-bottom: 1px solid var(--border);
+    background: var(--surface);
+  }
+  .stats-inner {
+    max-width: 1120px;
+    margin: 0 auto;
+    padding: 80px 40px;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 20px;
+    text-align: center;
+  }
+  .stat-num {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 48px;
+    color: var(--accent);
+    line-height: 1;
+  }
+  .stat-lbl {
+    font-size: 13px;
+    color: var(--text2);
+    margin-top: 6px;
+    line-height: 1.4;
+  }
+
+  /* ── TESTIMONIALS ── */
+  .testimonials {
+    max-width: 1120px;
+    margin: 0 auto;
+    padding: 100px 40px;
+  }
+  .test-head {
+    text-align: center;
+    margin-bottom: 48px;
+  }
+  .test-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+  }
+  .test-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 28px;
+  }
+  .test-quote {
+    font-size: 14px;
+    color: var(--text2);
+    line-height: 1.7;
+    margin-bottom: 20px;
+    font-style: italic;
+  }
+  .test-quote::before {
+    content: '\201C';
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 32px;
+    color: var(--accent);
+    line-height: 0;
+    display: block;
+    margin-bottom: 8px;
+  }
+  .test-who {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .test-avatar {
+    width: 32px; height: 32px;
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+    font-weight: 700;
+    color: #000;
+  }
+  .test-name { font-size: 13px; font-weight: 600; }
+  .test-role { font-size: 11px; color: var(--text3); }
+
+  /* ── FINAL CTA ── */
+  .cta-section {
+    max-width: 1120px;
+    margin: 0 auto;
+    padding: 100px 40px;
+    text-align: center;
+  }
+  .cta-section .section-desc { margin: 0 auto; }
+  .cta-form {
+    display: flex;
+    gap: 8px;
+    max-width: 440px;
+    margin: 32px auto 12px;
+  }
+
+  /* ── FOOTER ── */
+  footer {
+    border-top: 1px solid var(--border);
+    max-width: 1120px;
+    margin: 0 auto;
+    padding: 40px;
+  }
+  .footer-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 32px;
+  }
+  .footer-brand {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .footer-brand img {
+    width: 28px; height: 28px;
+    border-radius: 5px;
+  }
+  .footer-brand-name {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 20px;
+    letter-spacing: 2px;
+    color: var(--text);
+  }
+  .footer-tagline {
+    font-size: 12px;
+    color: var(--text3);
+    margin-top: 6px;
+    max-width: 220px;
+  }
+  .footer-cols {
+    display: flex;
+    gap: 56px;
+  }
+  .footer-col-head {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: var(--text2);
+    margin-bottom: 12px;
+  }
+  .footer-cols a {
+    display: block;
+    color: var(--text3);
+    text-decoration: none;
+    font-size: 13px;
+    margin-bottom: 8px;
+    transition: color 0.2s;
+  }
+  .footer-cols a:hover { color: var(--text2); }
+
+  .footer-bottom {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-top: 20px;
+    border-top: 1px solid var(--border);
+  }
+  .footer-copy { font-size: 12px; color: var(--text3); }
+  .footer-links {
+    display: flex;
+    gap: 8px;
+  }
+  .footer-links a {
+    width: 30px; height: 30px;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--text3);
+    text-decoration: none;
+    transition: color 0.2s, border-color 0.2s;
+  }
+  .footer-links a:hover { color: var(--text2); border-color: var(--text3); }
+
+  /* ── RESPONSIVE ── */
+  @media (max-width: 1024px) {
+    .hero { grid-template-columns: 1fr; gap: 48px; padding-top: 120px; }
+    .hero-phone { order: -1; }
+    .phone { width: 260px; }
+    .problem-grid { grid-template-columns: repeat(3, 1fr); }
+    .features-grid { grid-template-columns: repeat(2, 1fr); }
+    .how-grid { grid-template-columns: repeat(2, 1fr); gap: 32px; }
+    .stats-inner { grid-template-columns: repeat(2, 1fr); }
+    .test-grid { grid-template-columns: 1fr; max-width: 480px; margin: 0 auto; }
+  }
+
+  @media (max-width: 768px) {
+    nav { padding: 14px 20px; }
+    .nav-right { display: none; }
+    .hero, .problem, .how, .testimonials, .cta-section { padding-left: 20px; padding-right: 20px; }
+    .features-inner, .stats-inner, footer { padding-left: 20px; padding-right: 20px; }
+    .hero { padding-top: 100px; }
+    .problem-grid { grid-template-columns: 1fr 1fr; }
+    .features-grid { grid-template-columns: 1fr; }
+    .how-grid { grid-template-columns: 1fr 1fr; }
+    .stats-inner { grid-template-columns: 1fr 1fr; }
+    .hero-form, .cta-form { flex-direction: column; }
+    .footer-row { flex-direction: column; gap: 28px; }
+    .footer-cols { gap: 32px; }
+    .footer-bottom { flex-direction: column; gap: 12px; }
+  }
+
+  @media (max-width: 480px) {
+    .problem-grid { grid-template-columns: 1fr; }
+    .how-grid { grid-template-columns: 1fr; }
+    .stats-inner { grid-template-columns: 1fr; }
+    .footer-cols { flex-direction: column; gap: 20px; }
+  }
+
+  /* ── LEGAL MODAL ── */
+  .legal-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    z-index: 200;
+    background: rgba(0,0,0,0.72);
+    backdrop-filter: blur(6px);
+    align-items: center;
+    justify-content: center;
+    padding: 40px 20px;
+    opacity: 0;
+    transition: opacity 0.2s ease;
+  }
+  .legal-overlay.open {
+    display: flex;
+    opacity: 1;
+  }
+  .legal-modal {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    width: 100%;
+    max-width: 820px;
+    max-height: 90vh;
+    display: flex;
+    flex-direction: column;
+    box-shadow: 0 40px 80px rgba(0,0,0,0.6);
+  }
+  .legal-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 22px 28px;
+    border-bottom: 1px solid var(--border);
+  }
+  .legal-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 26px;
+    letter-spacing: 2px;
+    color: var(--text);
+  }
+  .legal-close {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    width: 36px; height: 36px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--text2);
+    cursor: pointer;
+    transition: color 0.2s, border-color 0.2s;
+  }
+  .legal-close:hover { color: var(--text); border-color: var(--text3); }
+
+  .legal-tabs {
+    display: flex;
+    gap: 4px;
+    padding: 12px 28px 0;
+    border-bottom: 1px solid var(--border);
+  }
+  .legal-tab {
+    background: none;
+    border: none;
+    color: var(--text3);
+    font-family: 'Chakra Petch', sans-serif;
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    padding: 10px 18px;
+    cursor: pointer;
+    border-bottom: 2px solid transparent;
+    transition: color 0.2s, border-color 0.2s;
+    margin-bottom: -1px;
+  }
+  .legal-tab:hover { color: var(--text2); }
+  .legal-tab.active {
+    color: var(--accent);
+    border-bottom-color: var(--accent);
+  }
+
+  .legal-body {
+    overflow-y: auto;
+    padding: 28px 32px 36px;
+    font-size: 14px;
+    line-height: 1.7;
+    color: var(--text2);
+  }
+  .legal-panel { display: none; }
+  .legal-panel.active { display: block; }
+
+  .legal-meta {
+    color: var(--text3);
+    font-size: 12px;
+    margin-bottom: 20px;
+  }
+  .legal-meta strong { color: var(--text2); }
+
+  .legal-body h3 {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 20px;
+    letter-spacing: 1.5px;
+    color: var(--text);
+    margin-top: 28px;
+    margin-bottom: 10px;
+  }
+  .legal-body h3:first-child { margin-top: 0; }
+  .legal-body h4 {
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--text);
+    margin-top: 16px;
+    margin-bottom: 6px;
+    letter-spacing: 0.5px;
+  }
+  .legal-body p { margin-bottom: 12px; }
+  .legal-body ul {
+    list-style: none;
+    padding-left: 0;
+    margin-bottom: 12px;
+  }
+  .legal-body ul li {
+    padding-left: 18px;
+    position: relative;
+    margin-bottom: 6px;
+  }
+  .legal-body ul li::before {
+    content: '';
+    position: absolute;
+    left: 4px;
+    top: 10px;
+    width: 4px; height: 4px;
+    border-radius: 50%;
+    background: var(--accent);
+  }
+  .legal-body a { color: var(--accent); text-decoration: none; }
+  .legal-body a:hover { text-decoration: underline; }
+  .legal-contact {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 16px 20px;
+    margin-top: 12px;
+    color: var(--text);
+    font-size: 13px;
+    line-height: 1.7;
+  }
+  .legal-note {
+    color: var(--text3);
+    font-size: 12px;
+    font-style: italic;
+    margin-top: 10px;
+  }
+
+  body.legal-open { overflow: hidden; }
+
+  @media (max-width: 640px) {
+    .legal-head { padding: 18px 20px; }
+    .legal-tabs { padding: 10px 20px 0; }
+    .legal-tab { padding: 10px 12px; font-size: 12px; }
+    .legal-body { padding: 22px 22px 28px; font-size: 13px; }
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <a href="#" class="nav-left">
+    <img src="stevo_profile.png" alt="Stevo">
+    <div class="nav-wordmark">STEVO</div>
+  </a>
+  <div class="nav-right">
+    <a href="#features">Features</a>
+    <a href="#how">How It Works</a>
+    <a href="#waitlist" class="nav-cta">Get Early Access</a>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div>
+    <div class="hero-badge">Coming Soon</div>
+    <h1 class="hero-title">
+      THE PRIVATE<br>
+      <span class="hero-title-accent">CREW APP</span>
+    </h1>
+    <p class="hero-sub">
+      Your crew deserves better than GroupMe, Venmo, and a notes app. Stevo brings social bets, poker nights, golf rounds, and settlements into one private place.
+    </p>
+
+    <div id="hero-wrap">
+      <div class="hero-success" id="hero-success">You're on the list. We'll let you know when Stevo drops.</div>
+      <div class="hero-form" id="hero-form">
+        <input type="email" class="hero-input" id="email-1" placeholder="your@email.com" autocomplete="email">
+        <button class="hero-btn" onclick="signup('hero')">Get Early Access</button>
+      </div>
+      <p class="hero-note" id="hero-note">No spam. Just a heads up when we launch.</p>
+    </div>
+
+    <div class="hero-proof">
+      <div class="hero-proof-avatars">
+        <span style="background:var(--accent)">S</span>
+        <span style="background:var(--blue)">J</span>
+        <span style="background:var(--purple)">D</span>
+      </div>
+      <span class="hero-proof-text"><strong>847 guys</strong> on the waitlist</span>
+    </div>
+
+    <div class="hero-socials">
+      <a href="https://instagram.com/stevoapp" target="_blank" rel="noopener" aria-label="Instagram"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="2" width="20" height="20" rx="5"/><circle cx="12" cy="12" r="5"/></svg></a>
+      <a href="https://tiktok.com/@stevoapp" target="_blank" rel="noopener" aria-label="TikTok"><svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-2.88 2.5 2.89 2.89 0 0 1 0-5.78c.3 0 .6.04.88.13v-3.5a6.37 6.37 0 0 0-.88-.07A6.27 6.27 0 0 0 3.23 15.2a6.27 6.27 0 0 0 6.26 6.26 6.27 6.27 0 0 0 6.26-6.26V8.88a8.2 8.2 0 0 0 3.84 1v-3.49z"/></svg></a>
+      <a href="https://twitter.com/stevoapp" target="_blank" rel="noopener" aria-label="X"><svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg></a>
+      <a href="https://youtube.com/@stevoapp" target="_blank" rel="noopener" aria-label="YouTube"><svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg></a>
+    </div>
+  </div>
+
+  <div class="hero-phone">
+    <div class="phone">
+      <div class="phone-notch"></div>
+      <div class="phone-screen">
+        <div class="phone-head">
+          <img src="stevo_profile.png" alt="Stevo" style="width:28px;height:28px;border-radius:6px">
+          <div class="phone-crew-label">Sunday Crew</div>
+        </div>
+        <div class="phone-stats">
+          <div class="phone-stat">
+            <div class="phone-stat-val green">$140</div>
+            <div class="phone-stat-lbl">Owed</div>
+          </div>
+          <div class="phone-stat">
+            <div class="phone-stat-val red">$60</div>
+            <div class="phone-stat-lbl">You Owe</div>
+          </div>
+          <div class="phone-stat">
+            <div class="phone-stat-val amber">67%</div>
+            <div class="phone-stat-lbl">Win Rate</div>
+          </div>
+        </div>
+        <div class="phone-card">
+          <div class="phone-card-row">
+            <div class="phone-card-name">You vs Jake K.</div>
+            <div class="phone-card-tag active">Active</div>
+          </div>
+          <div class="phone-card-desc">Chiefs cover -6.5 vs Raiders</div>
+          <div class="phone-card-foot">
+            <div class="phone-card-amt">$25</div>
+            <div class="phone-card-meta">Tap to call</div>
+          </div>
+        </div>
+        <div class="phone-card">
+          <div class="phone-card-row">
+            <div class="phone-card-name">Poker Night</div>
+            <div class="phone-card-tag date">Feb 28</div>
+          </div>
+          <div class="phone-card-desc">$50 buy-in &middot; 7 PM &middot; 4/6 in</div>
+          <div class="phone-card-foot">
+            <div class="phone-card-check">You're In</div>
+          </div>
+        </div>
+        <div class="phone-card">
+          <div class="phone-card-row">
+            <div class="phone-card-name">TPC Scottsdale</div>
+            <div class="phone-card-tag golf">Golf</div>
+          </div>
+          <div class="phone-card-desc">4-man skins &middot; Sat 8:30 AM</div>
+          <div class="phone-card-foot">
+            <div class="phone-card-amt">$20 skins</div>
+          </div>
+        </div>
+        <div class="phone-nav">
+          <svg class="active" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg>
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 8v8M8 12h8"/></svg>
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="4" y="4" width="16" height="16" rx="2"/><path d="M12 8v4l2 2"/></svg>
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 18V2l7 4-7 4"/><circle cx="8" cy="21" r="2"/></svg>
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9H4.5a2.5 2.5 0 0 1 0-5C7 4 7 7 12 7s5-3 7.5-3a2.5 2.5 0 0 1 0 5H18"/><path d="M4 22h16"/><path d="M18 2H6v7a6 6 0 0 0 12 0V2Z"/></svg>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PROBLEM -->
+<section class="problem">
+  <div class="reveal">
+    <div class="section-tag">The Problem</div>
+    <h2 class="section-title">Your crew is scattered<br>across five apps</h2>
+    <p class="section-desc">Bets get forgotten. Debts go unsettled. Nobody knows who's actually in for poker.</p>
+  </div>
+  <div class="problem-grid">
+    <div class="problem-item reveal reveal-d1">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="var(--text3)" stroke-width="1.5"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+      <div class="problem-item-name">GroupMe / Texts</div>
+      <div class="problem-item-desc">Coordinating across threads nobody checks</div>
+    </div>
+    <div class="problem-item reveal reveal-d2">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="var(--text3)" stroke-width="1.5"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+      <div class="problem-item-name">Venmo</div>
+      <div class="problem-item-desc">Chasing payments with no context</div>
+    </div>
+    <div class="problem-item reveal reveal-d3">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="var(--text3)" stroke-width="1.5"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+      <div class="problem-item-name">Notes App</div>
+      <div class="problem-item-desc">Tracking debts like it's 2004</div>
+    </div>
+    <div class="problem-item reveal reveal-d4">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="var(--text3)" stroke-width="1.5"><path d="M12 18V2l7 4-7 4"/><circle cx="8" cy="21" r="2"/></svg>
+      <div class="problem-item-name">Golf Apps</div>
+      <div class="problem-item-desc">No crew context or side bets</div>
+    </div>
+    <div class="problem-item reveal reveal-d1">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="var(--text3)" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="2"/><line x1="3" y1="9" x2="21" y2="9"/><line x1="3" y1="15" x2="21" y2="15"/><line x1="9" y1="3" x2="9" y2="21"/><line x1="15" y1="3" x2="15" y2="21"/></svg>
+      <div class="problem-item-name">Spreadsheets</div>
+      <div class="problem-item-desc">Poker logs nobody updates</div>
+    </div>
+  </div>
+</section>
+
+<!-- FEATURES -->
+<section class="features" id="features">
+  <div class="features-inner">
+    <div class="features-head reveal">
+      <div class="section-tag">The Solution</div>
+      <h2 class="section-title">Everything your crew does.<br>One app.</h2>
+      <p class="section-desc">Three core modules that handle what your group actually cares about.</p>
+    </div>
+    <div class="features-grid">
+      <div class="f-card reveal">
+        <div class="f-card-top amber"></div>
+        <div class="f-card-title">Bet Tracker</div>
+        <p class="f-card-desc">Challenge any crew member. Both sides confirm terms and outcomes. No more disputed debts.</p>
+        <ul class="f-card-list">
+          <li>Running settlement ledger</li>
+          <li>Lifetime win/loss records</li>
+          <li>Head-to-head history</li>
+          <li>Crew leaderboard</li>
+        </ul>
+      </div>
+      <div class="f-card reveal reveal-d1">
+        <div class="f-card-top purple"></div>
+        <div class="f-card-title">Poker Nights</div>
+        <p class="f-card-desc">Create games, manage RSVPs, track chips live, and post results that flow into settlements.</p>
+        <ul class="f-card-list">
+          <li>RSVP with auto waitlist</li>
+          <li>Live chip tracker</li>
+          <li>Results feed to ledger</li>
+          <li>Season stats per player</li>
+        </ul>
+      </div>
+      <div class="f-card reveal reveal-d2">
+        <div class="f-card-top blue"></div>
+        <div class="f-card-title">Golf Module</div>
+        <p class="f-card-desc">Set up tee times, create side bets, score live, and auto-settle skins when the round ends.</p>
+        <ul class="f-card-list">
+          <li>Tee time coordination</li>
+          <li>Skins &amp; side bet setup</li>
+          <li>One-hand live scorecard</li>
+          <li>Auto handicap tracking</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- HOW IT WORKS -->
+<section class="how" id="how">
+  <div class="how-head reveal">
+    <div class="section-tag">How It Works</div>
+    <h2 class="section-title">Up and running in 60 seconds</h2>
+    <p class="section-desc">No setup headache. Just your crew, your games, your rules.</p>
+  </div>
+  <div class="how-grid">
+    <div class="how-step reveal">
+      <div class="how-num">01</div>
+      <div class="how-step-title">Create Your Crew</div>
+      <p class="how-step-desc">Start a private group and invite your guys via text or link.</p>
+    </div>
+    <div class="how-step reveal reveal-d1">
+      <div class="how-num">02</div>
+      <div class="how-step-title">Set The Stakes</div>
+      <p class="how-step-desc">Make a bet, schedule poker, or create a golf round.</p>
+    </div>
+    <div class="how-step reveal reveal-d2">
+      <div class="how-num">03</div>
+      <div class="how-step-title">Play &amp; Track</div>
+      <p class="how-step-desc">Live scores, chip counts, and bet outcomes in one feed.</p>
+    </div>
+    <div class="how-step reveal reveal-d3">
+      <div class="how-num">04</div>
+      <div class="how-step-title">Settle Up</div>
+      <p class="how-step-desc">One-tap settlement. Everyone knows who owes who.</p>
+    </div>
+  </div>
+</section>
+
+<!-- STATS -->
+<section class="stats" id="market">
+  <div class="stats-inner">
+    <div class="reveal">
+      <div class="stat-num" data-target="59" data-suffix="M">0</div>
+      <div class="stat-lbl">Fantasy sports players</div>
+    </div>
+    <div class="reveal reveal-d1">
+      <div class="stat-num" data-target="60" data-suffix="M">0</div>
+      <div class="stat-lbl">Casual poker players</div>
+    </div>
+    <div class="reveal reveal-d2">
+      <div class="stat-num" data-target="25" data-suffix="M">0</div>
+      <div class="stat-lbl">Recreational golfers</div>
+    </div>
+    <div class="reveal reveal-d3">
+      <div class="stat-num" data-target="40" data-suffix="M+">0</div>
+      <div class="stat-lbl">Friend group bettors</div>
+    </div>
+  </div>
+</section>
+
+<!-- TESTIMONIALS -->
+<section class="testimonials">
+  <div class="test-head reveal">
+    <div class="section-tag">Beta Feedback</div>
+    <h2 class="section-title">What crews are saying</h2>
+  </div>
+  <div class="test-grid">
+    <div class="test-card reveal">
+      <p class="test-quote">We used to argue about who owes who every week. Now it's all right there. Nobody can deny the receipts.</p>
+      <div class="test-who">
+        <div class="test-avatar" style="background:var(--accent)">M</div>
+        <div>
+          <div class="test-name">Mike R.</div>
+          <div class="test-role">Denver, CO</div>
+        </div>
+      </div>
+    </div>
+    <div class="test-card reveal reveal-d1">
+      <p class="test-quote">The poker module alone is worth it. Auto-settling chip counts into the group ledger is a game changer.</p>
+      <div class="test-who">
+        <div class="test-avatar" style="background:var(--purple)">J</div>
+        <div>
+          <div class="test-name">Jake T.</div>
+          <div class="test-role">Austin, TX</div>
+        </div>
+      </div>
+    </div>
+    <div class="test-card reveal reveal-d2">
+      <p class="test-quote">Finally an app that gets it. The golf skins tracker with auto payouts? We use it every weekend now.</p>
+      <div class="test-who">
+        <div class="test-avatar" style="background:var(--blue)">D</div>
+        <div>
+          <div class="test-name">Danny K.</div>
+          <div class="test-role">Scottsdale, AZ</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<section class="cta-section" id="waitlist">
+  <div class="reveal">
+    <div class="section-tag">Early Access</div>
+    <h2 class="section-title" style="font-size:clamp(40px,5vw,64px)">Your crew is waiting</h2>
+    <p class="section-desc">Stevo is launching soon. Get early access and be first in line.</p>
+    <div class="cta-form" id="cta-form">
+      <input type="email" class="hero-input" id="email-2" placeholder="your@email.com" autocomplete="email">
+      <button class="hero-btn" onclick="signup('cta')">Join Waitlist</button>
+    </div>
+    <p class="hero-note" id="cta-note">No spam. Just a heads up when we launch.</p>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-row">
+    <div>
+      <div class="footer-brand">
+        <img src="stevo_profile.png" alt="Stevo">
+        <div class="footer-brand-name">STEVO</div>
+      </div>
+      <p class="footer-tagline">The private crew app for guys who bet, play, and compete.</p>
+    </div>
+    <div class="footer-cols">
+      <div>
+        <div class="footer-col-head">Product</div>
+        <a href="#features">Features</a>
+        <a href="#how">How It Works</a>
+        <a href="#waitlist">Early Access</a>
+      </div>
+      <div>
+        <div class="footer-col-head">Company</div>
+        <a href="#" data-legal="privacy">Privacy</a>
+        <a href="#" data-legal="terms">Terms</a>
+        <a href="mailto:support@stevoapp.com">Contact</a>
+      </div>
+      <div>
+        <div class="footer-col-head">Social</div>
+        <a href="https://instagram.com/stevoapp" target="_blank" rel="noopener">Instagram</a>
+        <a href="https://tiktok.com/@stevoapp" target="_blank" rel="noopener">TikTok</a>
+        <a href="https://twitter.com/stevoapp" target="_blank" rel="noopener">X / Twitter</a>
+        <a href="https://youtube.com/@stevoapp" target="_blank" rel="noopener">YouTube</a>
+      </div>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <div class="footer-copy">&copy; 2026 Stevo App LLC</div>
+    <div class="footer-links">
+      <a href="https://instagram.com/stevoapp" target="_blank" rel="noopener" aria-label="Instagram"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="2" width="20" height="20" rx="5"/><circle cx="12" cy="12" r="5"/></svg></a>
+      <a href="https://tiktok.com/@stevoapp" target="_blank" rel="noopener" aria-label="TikTok"><svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-2.88 2.5 2.89 2.89 0 0 1 0-5.78c.3 0 .6.04.88.13v-3.5a6.37 6.37 0 0 0-.88-.07A6.27 6.27 0 0 0 3.23 15.2a6.27 6.27 0 0 0 6.26 6.26 6.27 6.27 0 0 0 6.26-6.26V8.88a8.2 8.2 0 0 0 3.84 1v-3.49z"/></svg></a>
+      <a href="https://twitter.com/stevoapp" target="_blank" rel="noopener" aria-label="X"><svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg></a>
+      <a href="https://youtube.com/@stevoapp" target="_blank" rel="noopener" aria-label="YouTube"><svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg></a>
+    </div>
+  </div>
+</footer>
+
+<!-- LEGAL MODAL -->
+<div class="legal-overlay" id="legal-overlay" role="dialog" aria-modal="true" aria-labelledby="legal-title">
+  <div class="legal-modal">
+    <div class="legal-head">
+      <div class="legal-title" id="legal-title">Legal</div>
+      <button class="legal-close" id="legal-close" aria-label="Close">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+      </button>
+    </div>
+    <div class="legal-tabs" role="tablist">
+      <button class="legal-tab active" data-tab="terms" role="tab" aria-selected="true">Terms of Service</button>
+      <button class="legal-tab" data-tab="privacy" role="tab" aria-selected="false">Privacy</button>
+    </div>
+    <div class="legal-body" id="legal-body">
+
+      <div class="legal-panel active" data-panel="terms">
+        <p class="legal-meta"><strong>Stevo App LLC</strong><br>Effective Date: April 12, 2026 &middot; Last Updated: April 12, 2026</p>
+
+        <h3>1. Agreement to Terms</h3>
+        <p>These Terms of Service ("Terms") constitute a legally binding agreement between you and Stevo App LLC ("Company," "we," "us," or "our") governing your access to and use of the Stevo mobile application, website at stevoapp.com, and any related services (collectively, the "Services").</p>
+        <p>By accessing or using our Services, you agree to be bound by these Terms. If you do not agree to these Terms, you must immediately discontinue use of our Services.</p>
+        <p>These Services are intended for personal use only. You must be at least 18 years of age to use the Services.</p>
+
+        <h3>2. Description of Services</h3>
+        <p>Stevo is a private, invite-only mobile application for friend groups to track social bets, organize poker nights, coordinate golf rounds, and manage crew competitions and standings. Stevo is a social tracking tool only. It does not facilitate, process, or hold real-money transactions between users.</p>
+
+        <h3>3. User Accounts</h3>
+        <p>To use the Services, you must create an account. You agree to:</p>
+        <ul>
+          <li>Provide accurate, current, and complete information during registration</li>
+          <li>Maintain and promptly update your account information</li>
+          <li>Keep your account credentials secure and confidential</li>
+          <li>Accept responsibility for all activity that occurs under your account</li>
+          <li>Notify us immediately at <a href="mailto:support@stevoapp.com">support@stevoapp.com</a> of any unauthorized use of your account</li>
+        </ul>
+        <p>We reserve the right to suspend or terminate accounts that violate these Terms or that have been inactive for an extended period.</p>
+
+        <h3>4. Subscriptions and Payments</h3>
+        <h4>4.1 Free and Premium Tiers</h4>
+        <p>Stevo offers a free tier with core features and an optional Premium subscription with advanced features. Premium subscription pricing is displayed within the Services and may be updated with advance notice.</p>
+        <h4>4.2 Billing and Renewal</h4>
+        <p>Premium subscriptions automatically renew at the end of each billing period (monthly or annually, as selected by you) unless cancelled. By subscribing, you authorize us to charge your payment method on a recurring basis. We accept Visa, Mastercard, American Express, Discover, and Apple Pay. All payments are in US dollars.</p>
+        <h4>4.3 Cancellation</h4>
+        <p>You may cancel your subscription at any time through your account settings or through the App Store/Google Play account management interface. Cancellation takes effect at the end of the current billing period. You will retain access to Premium features through the end of the paid period.</p>
+        <h4>4.4 Refunds</h4>
+        <p>Refund requests may be submitted to <a href="mailto:support@stevoapp.com">support@stevoapp.com</a>. Refunds are evaluated on a case-by-case basis. Purchases made through the Apple App Store or Google Play Store are subject to those platforms' refund policies.</p>
+
+        <h3>5. Prohibited Activities</h3>
+        <p>You agree not to use the Services to:</p>
+        <ul>
+          <li>Use the Services to advertise or offer to sell goods and services</li>
+          <li>Sell, transfer, or assign your profile or account to another party</li>
+          <li>Use the platform to facilitate real-money gambling or wagering transactions</li>
+          <li>Impersonate another user or submit false bet outcomes</li>
+          <li>Violate any applicable law or regulation</li>
+          <li>Harass, abuse, or harm other users</li>
+          <li>Upload or transmit viruses or malicious code</li>
+          <li>Attempt to gain unauthorized access to any part of the Services</li>
+          <li>Scrape, harvest, or collect data from the Services without authorization</li>
+          <li>Use the Services for any commercial purpose without our written consent</li>
+        </ul>
+
+        <h3>6. User Generated Content</h3>
+        <p>The Services allow users to post content including bet terms, outcomes, poker results, golf scores, and activity feed posts ("User Content"). You retain ownership of your User Content. By posting User Content, you grant Stevo App LLC a non-exclusive, royalty-free license to use, store, display, and distribute such content solely for the purpose of providing the Services.</p>
+        <p>You are solely responsible for your User Content and its accuracy. You represent that you have all rights necessary to post the content and that it does not violate any third-party rights or applicable law.</p>
+
+        <h3>7. Third-Party Services and Links</h3>
+        <p>The Services may link to third-party payment platforms including Venmo, Cash App, and Zelle to facilitate settlement between users. These links are provided as a convenience only. Stevo App LLC does not process, hold, or control any funds transferred through these third-party services. Your use of any third-party service is governed by that service's own terms and privacy policy. We are not responsible for the content, privacy practices, or availability of any third-party services.</p>
+
+        <h3>8. SMS Communications</h3>
+        <p>By creating an account, you consent to receive SMS text messages from Stevo for account alerts and authentication purposes (program name: Stevo). Message and data rates may apply. You may opt out at any time by replying STOP to any SMS message. For help, reply HELP or contact us at <a href="mailto:support@stevoapp.com">support@stevoapp.com</a>.</p>
+
+        <h3>9. Intellectual Property</h3>
+        <p>The Services and their original content, features, and functionality are and will remain the exclusive property of Stevo App LLC. Our trademarks and trade dress may not be used in connection with any product or service without the prior written consent of Stevo App LLC.</p>
+
+        <h3>10. Disclaimer of Warranties</h3>
+        <p>THE SERVICES ARE PROVIDED ON AN "AS IS" AND "AS AVAILABLE" BASIS WITHOUT WARRANTIES OF ANY KIND, EITHER EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE, OR NON-INFRINGEMENT. WE DO NOT WARRANT THAT THE SERVICES WILL BE UNINTERRUPTED, ERROR-FREE, OR FREE OF VIRUSES OR OTHER HARMFUL COMPONENTS.</p>
+
+        <h3>11. Limitation of Liability</h3>
+        <p>TO THE MAXIMUM EXTENT PERMITTED BY LAW, STEVO APP LLC SHALL NOT BE LIABLE FOR ANY INDIRECT, INCIDENTAL, SPECIAL, CONSEQUENTIAL, OR PUNITIVE DAMAGES ARISING FROM YOUR USE OF THE SERVICES.</p>
+        <p>OUR TOTAL LIABILITY TO YOU FOR ANY CLAIM ARISING FROM THESE TERMS OR YOUR USE OF THE SERVICES SHALL NOT EXCEED THE AMOUNT YOU PAID TO US IN THE SIX (6) MONTHS PRECEDING THE CLAIM.</p>
+        <p>ANY CLAIM ARISING FROM THESE TERMS OR YOUR USE OF THE SERVICES MUST BE BROUGHT WITHIN ONE (1) YEAR OF THE DATE THE CAUSE OF ACTION AROSE.</p>
+
+        <h3>12. Dispute Resolution</h3>
+        <p>Before initiating any formal legal proceeding, you agree to first attempt to resolve any dispute informally by contacting us at <a href="mailto:support@stevoapp.com">support@stevoapp.com</a>. We will make good-faith efforts to resolve the dispute within thirty (30) days.</p>
+        <p>If informal resolution fails, disputes shall be resolved by binding arbitration in Douglas County, Colorado, United States. Arbitration is mandatory. If a dispute proceeds in court rather than arbitration, it shall take place in Douglas County, Colorado.</p>
+        <p>Stevo App LLC agrees to pay arbitration fees if deemed excessive by the arbitrator.</p>
+
+        <h3>13. Governing Law</h3>
+        <p>These Terms shall be governed by and construed in accordance with the laws of the State of Colorado, without regard to its conflict of law provisions.</p>
+
+        <h3>14. Updates to These Terms</h3>
+        <p>We reserve the right to update these Terms at any time. We will notify you of material changes at least seven (7) days before the update takes effect. The following changes may take effect immediately upon notification: new functionality, security updates, bug fixes, and court orders.</p>
+        <p>Your continued use of the Services after the effective date of any updates constitutes acceptance of the revised Terms.</p>
+
+        <h3>15. Contact Information</h3>
+        <p>For questions about these Terms, please contact us at:</p>
+        <div class="legal-contact">
+          <strong>Stevo App LLC</strong><br>
+          11868 Blacksmith Ct<br>
+          Parker, CO 80134<br>
+          Email: <a href="mailto:support@stevoapp.com">support@stevoapp.com</a>
+        </div>
+        <p class="legal-note">Note: Address and phone will be updated to a PO Box and Google Voice number before public launch.</p>
+        <p class="legal-note" style="margin-top:20px">Stevo App LLC &middot; stevoapp.com &middot; support@stevoapp.com</p>
+      </div>
+
+      <div class="legal-panel" data-panel="privacy">
+        <p class="legal-meta">Our full Privacy Policy is coming soon.</p>
+        <p>We take your privacy seriously. Stevo is a private, invite-only app, and your crew data stays between you and your crew. A complete Privacy Policy will be published here before public launch.</p>
+        <p>In the meantime, questions about privacy can be directed to <a href="mailto:support@stevoapp.com">support@stevoapp.com</a>.</p>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<script>
+// Scroll reveal
+const obs = new IntersectionObserver(entries => {
+  entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
+}, { threshold: 0.15 });
+document.querySelectorAll('.reveal').forEach(el => obs.observe(el));
+
+// Stat counter
+const statObs = new IntersectionObserver(entries => {
+  entries.forEach(e => {
+    if (!e.isIntersecting) return;
+    const el = e.target;
+    const target = +el.dataset.target;
+    const suffix = el.dataset.suffix || '';
+    let cur = 0;
+    const step = target / 35;
+    const timer = setInterval(() => {
+      cur += step;
+      if (cur >= target) { cur = target; clearInterval(timer); }
+      el.textContent = Math.floor(cur) + suffix;
+    }, 30);
+    statObs.unobserve(el);
+  });
+}, { threshold: 0.5 });
+document.querySelectorAll('[data-target]').forEach(el => statObs.observe(el));
+
+// Signup
+function signup(loc) {
+  const id = loc === 'hero' ? 'email-1' : 'email-2';
+  const input = document.getElementById(id);
+  const email = input.value.trim();
+  if (!email || !email.includes('@') || !email.includes('.')) {
+    input.style.borderColor = 'var(--red)';
+    setTimeout(() => input.style.borderColor = 'var(--border)', 2000);
+    return;
+  }
+  if (loc === 'hero') {
+    document.getElementById('hero-form').style.display = 'none';
+    document.getElementById('hero-note').style.display = 'none';
+    document.getElementById('hero-success').style.display = 'block';
+  } else {
+    document.getElementById('cta-form').innerHTML =
+      '<div style="color:var(--accent);font-weight:600;font-size:14px;padding:14px;background:rgba(245,158,11,0.08);border:1px solid rgba(245,158,11,0.2);border-radius:8px;width:100%">You\'re on the list.</div>';
+    document.getElementById('cta-note').style.display = 'none';
+  }
+  console.log('Signup:', email, loc);
+}
+
+document.querySelectorAll('.hero-input').forEach(input => {
+  input.addEventListener('keydown', e => {
+    if (e.key === 'Enter') signup(input.id === 'email-1' ? 'hero' : 'cta');
+  });
+});
+
+// Legal modal
+const legalOverlay = document.getElementById('legal-overlay');
+const legalBody = document.getElementById('legal-body');
+const legalTitle = document.getElementById('legal-title');
+
+function openLegal(tab) {
+  setLegalTab(tab || 'terms');
+  legalOverlay.classList.add('open');
+  document.body.classList.add('legal-open');
+  legalBody.scrollTop = 0;
+}
+function closeLegal() {
+  legalOverlay.classList.remove('open');
+  document.body.classList.remove('legal-open');
+}
+function setLegalTab(tab) {
+  document.querySelectorAll('.legal-tab').forEach(b => {
+    const on = b.dataset.tab === tab;
+    b.classList.toggle('active', on);
+    b.setAttribute('aria-selected', on ? 'true' : 'false');
+  });
+  document.querySelectorAll('.legal-panel').forEach(p => {
+    p.classList.toggle('active', p.dataset.panel === tab);
+  });
+  legalTitle.textContent = tab === 'terms' ? 'Terms of Service' : 'Privacy';
+  legalBody.scrollTop = 0;
+}
+
+document.querySelectorAll('[data-legal]').forEach(a => {
+  a.addEventListener('click', e => {
+    e.preventDefault();
+    openLegal(a.dataset.legal);
+  });
+});
+document.getElementById('legal-close').addEventListener('click', closeLegal);
+legalOverlay.addEventListener('click', e => {
+  if (e.target === legalOverlay) closeLegal();
+});
+document.querySelectorAll('.legal-tab').forEach(b => {
+  b.addEventListener('click', () => setLegalTab(b.dataset.tab));
+});
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape' && legalOverlay.classList.contains('open')) closeLegal();
+});
+</script>
+
+</body>
+</html>
