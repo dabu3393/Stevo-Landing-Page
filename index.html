@@ -962,7 +962,7 @@
 
 <nav>
   <a href="#" class="nav-left">
-    <img src="stevo_profile.png" alt="Stevo">
+    <img src="stevo-logo.png" alt="Stevo">
     <div class="nav-wordmark">STEVO</div>
   </a>
   <div class="nav-right">
@@ -999,7 +999,7 @@
         <span style="background:var(--blue)">J</span>
         <span style="background:var(--purple)">D</span>
       </div>
-      <span class="hero-proof-text"><strong>847 guys</strong> on the waitlist</span>
+      <span class="hero-proof-text"><strong id="waitlist-count">100</strong> guys on the waitlist</span>
     </div>
 
     <div class="hero-socials">
@@ -1015,7 +1015,7 @@
       <div class="phone-notch"></div>
       <div class="phone-screen">
         <div class="phone-head">
-          <img src="stevo_profile.png" alt="Stevo" style="width:28px;height:28px;border-radius:6px">
+          <img src="stevo-logo.png" alt="Stevo" style="width:28px;height:28px;border-radius:6px">
           <div class="phone-crew-label">Sunday Crew</div>
         </div>
         <div class="phone-stats">
@@ -1269,7 +1269,7 @@
   <div class="footer-row">
     <div>
       <div class="footer-brand">
-        <img src="stevo_profile.png" alt="Stevo">
+        <img src="stevo-logo.png" alt="Stevo">
         <div class="footer-brand-name">STEVO</div>
       </div>
       <p class="footer-tagline">The private crew app for guys who bet, play, and compete.</p>
@@ -1702,6 +1702,8 @@ async function signup(loc) {
     });
     if (!res.ok) throw new Error('Request failed');
 
+    bumpWaitlistCount();
+
     if (loc === 'hero') {
       document.getElementById('hero-form').style.display = 'none';
       document.getElementById('hero-note').style.display = 'none';
@@ -1730,6 +1732,25 @@ document.querySelectorAll('.hero-input').forEach(input => {
     if (e.key === 'Enter') signup(input.id === 'email-1' ? 'hero' : 'cta');
   });
 });
+
+// Waitlist count
+async function loadWaitlistCount() {
+  const el = document.getElementById('waitlist-count');
+  if (!el) return;
+  try {
+    const res = await fetch('/.netlify/functions/count');
+    if (!res.ok) return;
+    const { total } = await res.json();
+    if (typeof total === 'number') el.textContent = total.toLocaleString();
+  } catch {}
+}
+function bumpWaitlistCount() {
+  const el = document.getElementById('waitlist-count');
+  if (!el) return;
+  const n = parseInt(el.textContent.replace(/[^0-9]/g, ''), 10);
+  if (!isNaN(n)) el.textContent = (n + 1).toLocaleString();
+}
+loadWaitlistCount();
 
 // Legal modal
 const legalOverlay = document.getElementById('legal-overlay');
