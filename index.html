@@ -1680,7 +1680,7 @@ const statObs = new IntersectionObserver(entries => {
 document.querySelectorAll('[data-target]').forEach(el => statObs.observe(el));
 
 // Signup
-function signup(loc) {
+async function signup(loc) {
   const id = loc === 'hero' ? 'email-1' : 'email-2';
   const input = document.getElementById(id);
   const email = input.value.trim();
@@ -1689,16 +1689,40 @@ function signup(loc) {
     setTimeout(() => input.style.borderColor = 'var(--border)', 2000);
     return;
   }
-  if (loc === 'hero') {
-    document.getElementById('hero-form').style.display = 'none';
-    document.getElementById('hero-note').style.display = 'none';
-    document.getElementById('hero-success').style.display = 'block';
-  } else {
-    document.getElementById('cta-form').innerHTML =
-      '<div style="color:var(--accent);font-weight:600;font-size:14px;padding:14px;background:rgba(245,158,11,0.08);border:1px solid rgba(245,158,11,0.2);border-radius:8px;width:100%">You\'re on the list.</div>';
-    document.getElementById('cta-note').style.display = 'none';
+
+  const btn = input.nextElementSibling;
+  const originalLabel = btn ? btn.textContent : '';
+  if (btn) { btn.disabled = true; btn.textContent = 'Joining…'; }
+
+  try {
+    const res = await fetch('/.netlify/functions/subscribe', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email })
+    });
+    if (!res.ok) throw new Error('Request failed');
+
+    if (loc === 'hero') {
+      document.getElementById('hero-form').style.display = 'none';
+      document.getElementById('hero-note').style.display = 'none';
+      document.getElementById('hero-success').style.display = 'block';
+    } else {
+      document.getElementById('cta-form').innerHTML =
+        '<div style="color:var(--accent);font-weight:600;font-size:14px;padding:14px;background:rgba(245,158,11,0.08);border:1px solid rgba(245,158,11,0.2);border-radius:8px;width:100%">You\'re on the list.</div>';
+      document.getElementById('cta-note').style.display = 'none';
+    }
+  } catch (err) {
+    input.style.borderColor = 'var(--red)';
+    setTimeout(() => input.style.borderColor = 'var(--border)', 2500);
+    const note = document.getElementById(loc === 'hero' ? 'hero-note' : 'cta-note');
+    if (note) {
+      const prev = note.textContent;
+      note.textContent = 'Something went wrong. Please try again.';
+      note.style.color = 'var(--red)';
+      setTimeout(() => { note.textContent = prev; note.style.color = ''; }, 4000);
+    }
+    if (btn) { btn.disabled = false; btn.textContent = originalLabel; }
   }
-  console.log('Signup:', email, loc);
 }
 
 document.querySelectorAll('.hero-input').forEach(input => {
