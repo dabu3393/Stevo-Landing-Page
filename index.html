@@ -442,18 +442,58 @@
   .features-head .section-desc { margin: 0 auto; }
 
   .features-grid {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 120px;
+    padding-top: 0;
   }
+
+  /* Each row holds the box and the picture as siblings */
+  .f-row {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1.4fr);
+    gap: 48px;
+    align-items: center;
+    position: relative;
+  }
+  /* Even rows reverse: image on left, box on right */
+  .f-row.reverse {
+    grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr);
+  }
+  .f-row.reverse .f-card { order: 2; }
+  .f-row.reverse .f-card-img { order: 1; }
+
   .f-card {
     background: var(--bg);
     border: 1px solid var(--border);
     border-radius: 14px;
-    padding: 28px 24px;
+    padding: 44px 40px;
     transition: border-color 0.2s;
+    min-width: 0;
+    position: relative;
+    z-index: 2;
+    box-shadow: 0 24px 60px rgba(0,0,0,0.5);
   }
   .f-card:hover { border-color: var(--text3); }
+
+  /* Image sits OUTSIDE the box, with its own border + shadow */
+  .f-card-img {
+    display: block;
+    width: 100%;
+    height: 520px;
+    object-fit: cover;
+    border-radius: 14px;
+    border: 6px solid var(--surface2);
+    box-shadow: 0 30px 80px rgba(0,0,0,0.7);
+    transition: transform 0.4s ease, box-shadow 0.3s ease;
+  }
+  .f-row:nth-of-type(1) .f-card-img { transform: rotate(4deg); }
+  .f-row:nth-of-type(2) .f-card-img { transform: rotate(-5deg); }
+  .f-row:nth-of-type(3) .f-card-img { transform: rotate(3deg); }
+  .f-row:hover .f-card-img {
+    transform: rotate(0deg) scale(1.02);
+    box-shadow: 0 40px 100px rgba(0,0,0,0.8);
+  }
 
   .f-card-top {
     width: 3px;
@@ -467,34 +507,35 @@
 
   .f-card-title {
     font-family: 'Bebas Neue', sans-serif;
-    font-size: 24px;
-    letter-spacing: 1px;
-    margin-bottom: 10px;
+    font-size: 42px;
+    letter-spacing: 1.5px;
+    margin-bottom: 14px;
+    line-height: 1;
   }
   .f-card-desc {
-    font-size: 13px;
+    font-size: 17px;
     color: var(--text2);
-    line-height: 1.7;
-    margin-bottom: 18px;
+    line-height: 1.6;
+    margin-bottom: 24px;
   }
   .f-card-list {
     list-style: none;
     display: flex;
     flex-direction: column;
-    gap: 8px;
+    gap: 12px;
   }
   .f-card-list li {
-    font-size: 13px;
+    font-size: 16px;
     color: var(--text2);
-    padding-left: 16px;
+    padding-left: 20px;
     position: relative;
   }
   .f-card-list li::before {
     content: '';
     position: absolute;
     left: 0;
-    top: 7px;
-    width: 4px; height: 4px;
+    top: 9px;
+    width: 5px; height: 5px;
     border-radius: 50%;
     background: var(--text3);
   }
@@ -721,7 +762,10 @@
     .hero-phone { order: -1; }
     .phone { width: 260px; }
     .problem-grid { grid-template-columns: repeat(3, 1fr); }
-    .features-grid { grid-template-columns: repeat(2, 1fr); }
+    .features-grid { gap: 80px; }
+    .f-row { gap: 32px; }
+    .f-card { padding: 28px; }
+    .f-card-img { height: 380px; }
     .how-grid { grid-template-columns: repeat(2, 1fr); gap: 32px; }
     .stats-inner { grid-template-columns: repeat(2, 1fr); }
     .test-grid { grid-template-columns: 1fr; max-width: 480px; margin: 0 auto; }
@@ -734,7 +778,18 @@
     .features-inner, .stats-inner, footer { padding-left: 20px; padding-right: 20px; }
     .hero { padding-top: 100px; }
     .problem-grid { grid-template-columns: 1fr 1fr; }
-    .features-grid { grid-template-columns: 1fr; }
+    .features-grid { gap: 56px; }
+    .f-row, .f-row.reverse { grid-template-columns: 1fr; gap: 24px; }
+    .f-row.reverse .f-card { order: 0; }
+    .f-row.reverse .f-card-img { order: 0; }
+    .f-card { padding: 28px; }
+    .f-card-title { font-size: 36px; }
+    .f-card-desc { font-size: 16px; }
+    .f-card-list li { font-size: 15px; }
+    .f-card-img { height: 260px; }
+    .f-row:nth-of-type(1) .f-card-img,
+    .f-row:nth-of-type(2) .f-card-img,
+    .f-row:nth-of-type(3) .f-card-img { transform: rotate(-2deg); }
     .how-grid { grid-template-columns: 1fr 1fr; }
     .stats-inner { grid-template-columns: 1fr 1fr; }
     .hero-form, .cta-form { flex-direction: column; }
@@ -1120,38 +1175,47 @@
       <p class="section-desc">Three core modules that handle what your group actually cares about.</p>
     </div>
     <div class="features-grid">
-      <div class="f-card reveal">
-        <div class="f-card-top amber"></div>
-        <div class="f-card-title">Bet Tracker</div>
-        <p class="f-card-desc">Challenge any crew member. Both sides confirm terms and outcomes. No more disputed debts.</p>
-        <ul class="f-card-list">
-          <li>Running settlement ledger</li>
-          <li>Lifetime win/loss records</li>
-          <li>Head-to-head history</li>
-          <li>Crew leaderboard</li>
-        </ul>
+      <div class="f-row reveal">
+        <div class="f-card">
+          <div class="f-card-top amber"></div>
+          <div class="f-card-title">Bet Tracker</div>
+          <p class="f-card-desc">Challenge any crew member. Both sides confirm terms and outcomes. No more disputed debts.</p>
+          <ul class="f-card-list">
+            <li>Running settlement ledger</li>
+            <li>Lifetime win/loss records</li>
+            <li>Head-to-head history</li>
+            <li>Crew leaderboard</li>
+          </ul>
+        </div>
+        <img src="bet.png" alt="Friends placing a bet" class="f-card-img" loading="lazy">
       </div>
-      <div class="f-card reveal reveal-d1">
-        <div class="f-card-top purple"></div>
-        <div class="f-card-title">Poker Nights</div>
-        <p class="f-card-desc">Create games, manage RSVPs, track chips live, and post results that flow into settlements.</p>
-        <ul class="f-card-list">
-          <li>RSVP with auto waitlist</li>
-          <li>Live chip tracker</li>
-          <li>Results feed to ledger</li>
-          <li>Season stats per player</li>
-        </ul>
+      <div class="f-row reverse reveal">
+        <div class="f-card">
+          <div class="f-card-top purple"></div>
+          <div class="f-card-title">Poker Nights</div>
+          <p class="f-card-desc">Create games, manage RSVPs, track chips live, and post results that flow into settlements.</p>
+          <ul class="f-card-list">
+            <li>RSVP with auto waitlist</li>
+            <li>Live chip tracker</li>
+            <li>Results feed to ledger</li>
+            <li>Season stats per player</li>
+          </ul>
+        </div>
+        <img src="poker.png" alt="Poker night with the crew" class="f-card-img" loading="lazy">
       </div>
-      <div class="f-card reveal reveal-d2">
-        <div class="f-card-top blue"></div>
-        <div class="f-card-title">Golf Module</div>
-        <p class="f-card-desc">Set up tee times, create side bets, score live, and auto-settle skins when the round ends.</p>
-        <ul class="f-card-list">
-          <li>Tee time coordination</li>
-          <li>Skins &amp; side bet setup</li>
-          <li>One-hand live scorecard</li>
-          <li>Auto handicap tracking</li>
-        </ul>
+      <div class="f-row reveal">
+        <div class="f-card">
+          <div class="f-card-top blue"></div>
+          <div class="f-card-title">Golf Module</div>
+          <p class="f-card-desc">Set up tee times, create side bets, score live, and auto-settle skins when the round ends.</p>
+          <ul class="f-card-list">
+            <li>Tee time coordination</li>
+            <li>Skins &amp; side bet setup</li>
+            <li>One-hand live scorecard</li>
+            <li>Auto handicap tracking</li>
+          </ul>
+        </div>
+        <img src="golf.png" alt="Golf round with the crew" class="f-card-img" loading="lazy">
       </div>
     </div>
   </div>
