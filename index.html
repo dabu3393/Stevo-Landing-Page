@@ -263,16 +263,84 @@
     border-color: var(--text3);
   }
 
-  /* Hero banner */
-  .hero-banner {
+  /* Hero screenshot carousel */
+  .hero-carousel {
     display: flex;
     align-items: center;
     justify-content: center;
+    flex-direction: column;
+    gap: 16px;
   }
-  .hero-banner-img {
+  .hero-carousel-frame {
+    position: relative;
     width: 100%;
-    max-width: 520px;
-    border-radius: 12px;
+    max-width: 300px;
+    aspect-ratio: 9 / 19.5;
+    background: #000;
+    border-radius: 36px;
+    overflow: hidden;
+    border: 2px solid var(--border);
+    box-shadow: 0 40px 80px rgba(0,0,0,0.5);
+    cursor: pointer;
+    user-select: none;
+  }
+  .hero-carousel-slide {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    opacity: 0;
+    transition: opacity 0.4s ease;
+  }
+  .hero-carousel-slide.active {
+    opacity: 1;
+  }
+  .hero-carousel-hint {
+    position: absolute;
+    bottom: 16px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: rgba(0,0,0,0.6);
+    backdrop-filter: blur(8px);
+    color: #fff;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    padding: 6px 12px;
+    border-radius: 20px;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+  }
+  .hero-carousel-frame:hover .hero-carousel-hint {
+    opacity: 1;
+  }
+  .hero-carousel-dots {
+    display: flex;
+    gap: 8px;
+    justify-content: center;
+  }
+  .hero-carousel-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--border);
+    border: none;
+    padding: 0;
+    cursor: pointer;
+    transition: background 0.2s, transform 0.2s;
+  }
+  .hero-carousel-dot.active {
+    background: var(--accent);
+    transform: scale(1.3);
+  }
+  .hero-carousel-dot:hover {
+    background: var(--text3);
+  }
+  .hero-carousel-dot.active:hover {
+    background: var(--accent);
   }
 
   /* ── SECTION SHARED ── */
@@ -714,7 +782,7 @@
   /* ── RESPONSIVE ── */
   @media (max-width: 1024px) {
     .hero { grid-template-columns: 1fr; gap: 48px; padding-top: 120px; }
-    .hero-banner { order: -1; }
+    .hero-carousel { order: -1; }
     .problem-grid { grid-template-columns: repeat(3, 1fr); }
     .features-grid { gap: 80px; }
     .f-row { gap: 32px; }
@@ -1021,8 +1089,22 @@
     </div>
   </div>
 
-  <div class="hero-banner">
-    <img src="stevo-banner.png" alt="Stevo — The Private Crew App" class="hero-banner-img">
+  <div class="hero-carousel">
+    <div class="hero-carousel-frame" id="carousel" role="button" tabindex="0" aria-label="App screenshot — click to see next screen">
+      <img src="screen-1.png" alt="Stevo app screen 1" class="hero-carousel-slide active" data-slide="0">
+      <img src="screen-2.png" alt="Stevo app screen 2" class="hero-carousel-slide" data-slide="1" loading="lazy">
+      <img src="screen-3.png" alt="Stevo app screen 3" class="hero-carousel-slide" data-slide="2" loading="lazy">
+      <img src="screen-4.png" alt="Stevo app screen 4" class="hero-carousel-slide" data-slide="3" loading="lazy">
+      <img src="screen-5.png" alt="Stevo app screen 5" class="hero-carousel-slide" data-slide="4" loading="lazy">
+      <div class="hero-carousel-hint">Tap for next screen</div>
+    </div>
+    <div class="hero-carousel-dots" role="tablist" aria-label="Screen selector">
+      <button class="hero-carousel-dot active" data-dot="0" aria-label="Screen 1"></button>
+      <button class="hero-carousel-dot" data-dot="1" aria-label="Screen 2"></button>
+      <button class="hero-carousel-dot" data-dot="2" aria-label="Screen 3"></button>
+      <button class="hero-carousel-dot" data-dot="3" aria-label="Screen 4"></button>
+      <button class="hero-carousel-dot" data-dot="4" aria-label="Screen 5"></button>
+    </div>
   </div>
 </section>
 
@@ -1676,6 +1758,40 @@ const obs = new IntersectionObserver(entries => {
   entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
 }, { threshold: 0.15 });
 document.querySelectorAll('.reveal').forEach(el => obs.observe(el));
+
+// Hero carousel
+(function initCarousel() {
+  const frame = document.getElementById('carousel');
+  if (!frame) return;
+  const slides = frame.querySelectorAll('.hero-carousel-slide');
+  const dots = document.querySelectorAll('.hero-carousel-dot');
+  const total = slides.length;
+  let current = 0;
+
+  function showSlide(i) {
+    current = (i + total) % total;
+    slides.forEach((s, idx) => s.classList.toggle('active', idx === current));
+    dots.forEach((d, idx) => d.classList.toggle('active', idx === current));
+  }
+
+  // Click image to advance
+  frame.addEventListener('click', () => showSlide(current + 1));
+
+  // Keyboard support: Enter/Space advances, arrows navigate
+  frame.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); showSlide(current + 1); }
+    else if (e.key === 'ArrowRight') { e.preventDefault(); showSlide(current + 1); }
+    else if (e.key === 'ArrowLeft') { e.preventDefault(); showSlide(current - 1); }
+  });
+
+  // Dots jump directly
+  dots.forEach((dot, idx) => {
+    dot.addEventListener('click', (e) => {
+      e.stopPropagation();
+      showSlide(idx);
+    });
+  });
+})();
 
 // Stat counter
 const statObs = new IntersectionObserver(entries => {
