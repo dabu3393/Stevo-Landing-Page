@@ -263,121 +263,17 @@
     border-color: var(--text3);
   }
 
-  /* Phone mockup */
-  .hero-phone {
+  /* Hero banner */
+  .hero-banner {
     display: flex;
+    align-items: center;
     justify-content: center;
   }
-  .phone {
-    width: 280px;
-    background: var(--surface);
-    border-radius: 36px;
-    border: 1.5px solid var(--border);
-    overflow: hidden;
-    box-shadow: 0 40px 80px rgba(0,0,0,0.4);
-  }
-  .phone-notch {
-    width: 100px; height: 26px;
-    background: var(--bg);
-    border-radius: 0 0 14px 14px;
-    margin: 0 auto;
-  }
-  .phone-screen { padding: 14px; }
-
-  .phone-head {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 14px;
-  }
-  .phone-logo {
-    font-family: 'Bebas Neue', sans-serif;
-    font-size: 20px;
-    letter-spacing: 2px;
-    color: var(--text);
-  }
-  .phone-crew-label {
-    background: var(--surface2);
-    border: 1px solid var(--border);
+  .hero-banner-img {
+    width: 100%;
+    max-width: 520px;
     border-radius: 12px;
-    padding: 3px 10px;
-    font-size: 11px;
-    color: var(--text2);
   }
-
-  .phone-stats {
-    display: grid;
-    grid-template-columns: 1fr 1fr 1fr;
-    gap: 6px;
-    margin-bottom: 12px;
-  }
-  .phone-stat {
-    background: var(--surface2);
-    border-radius: 10px;
-    padding: 10px 4px;
-    text-align: center;
-  }
-  .phone-stat-val {
-    font-family: 'Bebas Neue', sans-serif;
-    font-size: 18px;
-  }
-  .phone-stat-val.green { color: #22C55E; }
-  .phone-stat-val.red { color: var(--red); }
-  .phone-stat-val.amber { color: var(--accent); }
-  .phone-stat-lbl {
-    font-size: 9px;
-    color: var(--text3);
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-    margin-top: 2px;
-  }
-
-  .phone-card {
-    background: var(--surface2);
-    border: 1px solid var(--border);
-    border-radius: 12px;
-    padding: 11px;
-    margin-bottom: 6px;
-  }
-  .phone-card-row {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 4px;
-  }
-  .phone-card-name { font-size: 12px; font-weight: 600; }
-  .phone-card-tag {
-    font-size: 9px;
-    font-weight: 700;
-    padding: 2px 7px;
-    border-radius: 6px;
-  }
-  .phone-card-tag.active { background: rgba(34,197,94,0.12); color: #22C55E; }
-  .phone-card-tag.date { background: rgba(139,92,246,0.12); color: var(--purple); }
-  .phone-card-tag.golf { background: rgba(59,130,246,0.12); color: var(--blue); }
-  .phone-card-desc { font-size: 11px; color: var(--text2); margin-bottom: 6px; }
-  .phone-card-foot {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-  }
-  .phone-card-amt {
-    font-family: 'Bebas Neue', sans-serif;
-    font-size: 15px;
-    color: var(--text);
-  }
-  .phone-card-meta { font-size: 9px; color: var(--text3); }
-  .phone-card-check { font-size: 10px; color: #22C55E; font-weight: 700; }
-
-  .phone-nav {
-    display: flex;
-    justify-content: space-around;
-    padding: 10px 0 4px;
-    border-top: 1px solid var(--border);
-    margin-top: 6px;
-  }
-  .phone-nav svg { opacity: 0.3; }
-  .phone-nav svg.active { opacity: 0.9; }
 
   /* ── SECTION SHARED ── */
   .section-tag {
@@ -538,6 +434,50 @@
     width: 5px; height: 5px;
     border-radius: 50%;
     background: var(--text3);
+  }
+
+  /* ── MORE FEATURES ── */
+  .more {
+    margin-top: 100px;
+    padding-top: 56px;
+    border-top: 1px solid var(--border);
+  }
+  .more-head {
+    text-align: center;
+    margin-bottom: 40px;
+  }
+  .more-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 16px;
+  }
+  .more-tile {
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 24px 20px;
+    transition: border-color 0.2s, transform 0.2s;
+    text-align: left;
+  }
+  .more-tile:hover {
+    border-color: var(--text3);
+    transform: translateY(-2px);
+  }
+  .more-tile-icon {
+    color: var(--accent);
+    margin-bottom: 14px;
+    display: block;
+  }
+  .more-tile-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 20px;
+    letter-spacing: 1px;
+    margin-bottom: 6px;
+  }
+  .more-tile-desc {
+    font-size: 13px;
+    color: var(--text2);
+    line-height: 1.5;
   }
 
   /* ── HOW IT WORKS ── */
@@ -759,8 +699,7 @@
   /* ── RESPONSIVE ── */
   @media (max-width: 1024px) {
     .hero { grid-template-columns: 1fr; gap: 48px; padding-top: 120px; }
-    .hero-phone { order: -1; }
-    .phone { width: 260px; }
+    .hero-banner { order: -1; }
     .problem-grid { grid-template-columns: repeat(3, 1fr); }
     .features-grid { gap: 80px; }
     .f-row { gap: 32px; }
@@ -769,6 +708,7 @@
     .how-grid { grid-template-columns: repeat(2, 1fr); gap: 32px; }
     .stats-inner { grid-template-columns: repeat(2, 1fr); }
     .test-grid { grid-template-columns: 1fr; max-width: 480px; margin: 0 auto; }
+    .more-grid { grid-template-columns: repeat(3, 1fr); }
   }
 
   @media (max-width: 768px) {
@@ -792,6 +732,7 @@
     .f-row:nth-of-type(3) .f-card-img { transform: rotate(-2deg); }
     .how-grid { grid-template-columns: 1fr 1fr; }
     .stats-inner { grid-template-columns: 1fr 1fr; }
+    .more-grid { grid-template-columns: 1fr 1fr; gap: 12px; }
     .hero-form, .cta-form { flex-direction: column; }
     .footer-row { flex-direction: column; gap: 28px; }
     .footer-cols { gap: 32px; }
@@ -1065,68 +1006,8 @@
     </div>
   </div>
 
-  <div class="hero-phone">
-    <div class="phone">
-      <div class="phone-notch"></div>
-      <div class="phone-screen">
-        <div class="phone-head">
-          <img src="stevo-logo.png" alt="Stevo" style="width:28px;height:28px;border-radius:6px">
-          <div class="phone-crew-label">Sunday Crew</div>
-        </div>
-        <div class="phone-stats">
-          <div class="phone-stat">
-            <div class="phone-stat-val green">$140</div>
-            <div class="phone-stat-lbl">Owed</div>
-          </div>
-          <div class="phone-stat">
-            <div class="phone-stat-val red">$60</div>
-            <div class="phone-stat-lbl">You Owe</div>
-          </div>
-          <div class="phone-stat">
-            <div class="phone-stat-val amber">67%</div>
-            <div class="phone-stat-lbl">Win Rate</div>
-          </div>
-        </div>
-        <div class="phone-card">
-          <div class="phone-card-row">
-            <div class="phone-card-name">You vs Jake K.</div>
-            <div class="phone-card-tag active">Active</div>
-          </div>
-          <div class="phone-card-desc">Chiefs cover -6.5 vs Raiders</div>
-          <div class="phone-card-foot">
-            <div class="phone-card-amt">$25</div>
-            <div class="phone-card-meta">Tap to call</div>
-          </div>
-        </div>
-        <div class="phone-card">
-          <div class="phone-card-row">
-            <div class="phone-card-name">Poker Night</div>
-            <div class="phone-card-tag date">Feb 28</div>
-          </div>
-          <div class="phone-card-desc">$50 buy-in &middot; 7 PM &middot; 4/6 in</div>
-          <div class="phone-card-foot">
-            <div class="phone-card-check">You're In</div>
-          </div>
-        </div>
-        <div class="phone-card">
-          <div class="phone-card-row">
-            <div class="phone-card-name">TPC Scottsdale</div>
-            <div class="phone-card-tag golf">Golf</div>
-          </div>
-          <div class="phone-card-desc">4-man skins &middot; Sat 8:30 AM</div>
-          <div class="phone-card-foot">
-            <div class="phone-card-amt">$20 skins</div>
-          </div>
-        </div>
-        <div class="phone-nav">
-          <svg class="active" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg>
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 8v8M8 12h8"/></svg>
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="4" y="4" width="16" height="16" rx="2"/><path d="M12 8v4l2 2"/></svg>
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 18V2l7 4-7 4"/><circle cx="8" cy="21" r="2"/></svg>
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9H4.5a2.5 2.5 0 0 1 0-5C7 4 7 7 12 7s5-3 7.5-3a2.5 2.5 0 0 1 0 5H18"/><path d="M4 22h16"/><path d="M18 2H6v7a6 6 0 0 0 12 0V2Z"/></svg>
-        </div>
-      </div>
-    </div>
+  <div class="hero-banner">
+    <img src="stevo-banner.png" alt="Stevo — The Private Crew App" class="hero-banner-img">
   </div>
 </section>
 
@@ -1216,6 +1097,55 @@
           </ul>
         </div>
         <img src="golf.png" alt="Golf round with the crew" class="f-card-img" loading="lazy">
+      </div>
+    </div>
+
+    <div class="more reveal">
+      <div class="more-head">
+        <h3 class="section-title" style="font-size:clamp(32px,4vw,48px)">And much more</h3>
+        <p class="section-desc" style="margin:0 auto">Every way your crew likes to compete &mdash; all in one place.</p>
+      </div>
+      <div class="more-grid">
+        <div class="more-tile">
+          <svg class="more-tile-icon" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16v4H4z"/><path d="M4 14h16v6H4z"/><path d="M12 8v6"/></svg>
+          <div class="more-tile-title">Fantasy Football</div>
+          <div class="more-tile-desc">League standings, payouts, and side bets all in the crew feed.</div>
+        </div>
+        <div class="more-tile">
+          <svg class="more-tile-icon" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><line x1="3" y1="9" x2="21" y2="9"/><line x1="3" y1="15" x2="21" y2="15"/><line x1="9" y1="3" x2="9" y2="21"/><line x1="15" y1="3" x2="15" y2="21"/></svg>
+          <div class="more-tile-title">Squares &amp; Pools</div>
+          <div class="more-tile-desc">Super Bowl squares, NCAA brackets, survivor pools &mdash; auto-scored.</div>
+        </div>
+        <div class="more-tile">
+          <svg class="more-tile-icon" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2l3 7h7l-5.5 4.5L18 21l-6-4-6 4 1.5-7.5L2 9h7z"/></svg>
+          <div class="more-tile-title">Pick'em Leagues</div>
+          <div class="more-tile-desc">Weekly NFL, NBA, or college picks with running leaderboards.</div>
+        </div>
+        <div class="more-tile">
+          <svg class="more-tile-icon" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M6 3v18"/><path d="M18 3v18"/><path d="M6 8h12"/><path d="M6 16h12"/></svg>
+          <div class="more-tile-title">Prop Battles</div>
+          <div class="more-tile-desc">Custom crew props &mdash; anything from "who eats first" to "score before halftime".</div>
+        </div>
+        <div class="more-tile">
+          <svg class="more-tile-icon" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
+          <div class="more-tile-title">Tailgate Planning</div>
+          <div class="more-tile-desc">RSVPs, food signups, and who's bringing the beer &mdash; handled.</div>
+        </div>
+        <div class="more-tile">
+          <svg class="more-tile-icon" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="5"/><path d="M20 21a8 8 0 0 0-16 0"/><path d="M9 8l2 2 4-4"/></svg>
+          <div class="more-tile-title">Season Awards</div>
+          <div class="more-tile-desc">MVP, biggest loser, longest win streak &mdash; tracked automatically.</div>
+        </div>
+        <div class="more-tile">
+          <svg class="more-tile-icon" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+          <div class="more-tile-title">Live Scoreboards</div>
+          <div class="more-tile-desc">Real-time scoring for any crew game or contest.</div>
+        </div>
+        <div class="more-tile">
+          <svg class="more-tile-icon" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20 7h-9"/><path d="M14 17H5"/><circle cx="17" cy="17" r="3"/><circle cx="7" cy="7" r="3"/></svg>
+          <div class="more-tile-title">Custom Challenges</div>
+          <div class="more-tile-desc">Build any head-to-head or group challenge your crew can dream up.</div>
+        </div>
       </div>
     </div>
   </div>
