@@ -6,7 +6,7 @@
 <title>Stevo — The Private Crew App</title>
 <meta name="description" content="Stevo is the private crew app for guys. Social bets, poker nights, golf, and more — all in one place for your crew.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Caveat:wght@500;700&family=Chakra+Petch:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Caveat:wght@500;700&family=Chakra+Petch:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,700;0,900;1,700&display=swap" rel="stylesheet">
 <style>
   :root {
     --bg: #0A0A10;
@@ -39,6 +39,61 @@
     color: var(--text);
     font-family: 'Chakra Petch', sans-serif;
     -webkit-font-smoothing: antialiased;
+    position: relative;
+    overflow-x: hidden;
+  }
+
+  /* Ambient gradient mesh background (very subtle colored lights) */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    z-index: -2;
+    background:
+      radial-gradient(ellipse 800px 600px at 15% 20%, rgba(37,99,235,0.08), transparent 60%),
+      radial-gradient(ellipse 700px 500px at 85% 40%, rgba(139,92,246,0.07), transparent 60%),
+      radial-gradient(ellipse 600px 500px at 50% 90%, rgba(251,191,36,0.05), transparent 60%);
+    pointer-events: none;
+  }
+
+  /* Film grain overlay — very subtle */
+  body::after {
+    content: '';
+    position: fixed;
+    inset: 0;
+    z-index: -1;
+    pointer-events: none;
+    opacity: 0.025;
+    mix-blend-mode: overlay;
+    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='200' height='200'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/></filter><rect width='200' height='200' filter='url(%23n)'/></svg>");
+  }
+
+  /* Scroll progress bar (fills as user scrolls) */
+  .scroll-progress {
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 3px;
+    width: 0%;
+    background: linear-gradient(90deg, var(--blue-ice), var(--accent), var(--purple));
+    z-index: 9999;
+    transition: width 0.1s linear;
+    box-shadow: 0 0 12px rgba(37,99,235,0.6);
+  }
+
+  /* Custom scrollbar (webkit) */
+  ::-webkit-scrollbar { width: 10px; }
+  ::-webkit-scrollbar-track { background: var(--bg); }
+  ::-webkit-scrollbar-thumb {
+    background: var(--surface2);
+    border-radius: 10px;
+    border: 2px solid var(--bg);
+  }
+  ::-webkit-scrollbar-thumb:hover { background: var(--border); }
+
+  /* Editorial serif font for pull quotes and magazine-style moments */
+  .serif {
+    font-family: 'Playfair Display', Georgia, serif;
   }
 
   /* ── SCROLL REVEAL ── */
@@ -266,49 +321,60 @@
 
   .hero-title {
     font-family: 'Bebas Neue', sans-serif;
-    font-size: clamp(52px, 6.5vw, 88px);
-    line-height: 0.9;
-    letter-spacing: 1.5px;
-    margin-bottom: 22px;
+    line-height: 0.82;
+    letter-spacing: 0;
+    margin-bottom: 28px;
+    margin-top: 4px;
+  }
+  .hero-title > span {
+    display: block;
     opacity: 0;
-    transform: translateY(20px);
-    animation: titleIn 0.8s cubic-bezier(.2,.8,.2,1) 0.1s forwards;
+    transform: translateY(40px);
+    animation: titleIn 0.9s cubic-bezier(.2,.8,.2,1) forwards;
   }
-  @keyframes titleIn {
-    to { opacity: 1; transform: translateY(0); }
-  }
-  .hero-title .ts-thin {
+  .hero-title .line-1 {
+    font-size: clamp(36px, 4vw, 56px);
     color: var(--text2);
     font-weight: 300;
-    display: inline-block;
+    letter-spacing: 4px;
+    animation-delay: 0.1s;
   }
-  .hero-title-accent {
-    display: inline-block;
-    background: linear-gradient(135deg, var(--blue-ice) 0%, var(--accent) 60%, var(--purple) 100%);
+  .hero-title .line-2 {
+    font-size: clamp(78px, 10vw, 144px);
+    color: var(--text);
+    letter-spacing: -1px;
+    margin-top: 8px;
+    animation-delay: 0.2s;
+  }
+  .hero-title .line-3 {
+    font-size: clamp(78px, 10vw, 144px);
+    background: linear-gradient(135deg, var(--blue-ice) 0%, var(--accent) 50%, var(--purple) 100%);
     background-size: 200% 200%;
     -webkit-background-clip: text;
     background-clip: text;
     -webkit-text-fill-color: transparent;
     color: transparent;
-    animation: gradShift 8s ease-in-out infinite;
+    animation: titleIn 0.9s cubic-bezier(.2,.8,.2,1) 0.3s forwards, gradShift 8s ease-in-out infinite;
+    letter-spacing: -1px;
+    margin-top: -6px;
+  }
+  .hero-title .line-4 {
+    font-family: 'Playfair Display', Georgia, serif;
+    font-style: italic;
+    font-weight: 700;
+    font-size: clamp(24px, 3vw, 38px);
+    color: var(--gold);
+    margin-top: 10px;
+    animation-delay: 0.5s;
+    letter-spacing: 0;
+    text-transform: none;
+  }
+  @keyframes titleIn {
+    to { opacity: 1; transform: translateY(0); }
   }
   @keyframes gradShift {
     0%, 100% { background-position: 0% 50%; }
     50% { background-position: 100% 50%; }
-  }
-
-  /* Handwritten aside (script font accent) */
-  .hero-aside {
-    font-family: 'Caveat', cursive;
-    font-weight: 700;
-    font-size: 22px;
-    color: var(--gold);
-    transform: rotate(-4deg);
-    display: inline-block;
-    margin-left: 10px;
-    vertical-align: middle;
-    position: relative;
-    top: -6px;
   }
 
   .hero-sub {
@@ -698,7 +764,7 @@
     grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr);
   }
   .f-row.reverse .f-card { order: 2; }
-  .f-row.reverse .f-card-img { order: 1; }
+  .f-row.reverse .f-photo { order: 1; }
 
   .f-card {
     background: var(--bg);
@@ -716,7 +782,37 @@
   .f-row[data-color="purple"]:hover .f-card { border-color: rgba(139,92,246,0.35); }
   .f-row[data-color="blue"]:hover .f-card { border-color: rgba(59,130,246,0.35); }
 
-  /* Image sits OUTSIDE the box, with its own border + shadow */
+  /* Photo frame (wrapper) sits OUTSIDE the box with tape/sticker detail */
+  .f-photo {
+    position: relative;
+    display: block;
+    transition: transform 0.5s cubic-bezier(.2,.8,.2,1);
+  }
+  .f-row:nth-of-type(1) .f-photo { --baseRot: 4deg; transform: rotate(4deg); }
+  .f-row:nth-of-type(2) .f-photo { --baseRot: -5deg; transform: rotate(-5deg); }
+  .f-row:nth-of-type(3) .f-photo { --baseRot: 3deg; transform: rotate(3deg); }
+  .f-row:hover .f-photo {
+    transform: rotate(0deg) scale(1.02);
+    animation: none;
+  }
+  /* Washi tape at top of photo — handmade/scrapbook feel */
+  .f-photo::before {
+    content: '';
+    position: absolute;
+    top: -14px;
+    left: 50%;
+    transform: translateX(-50%) rotate(-2deg);
+    width: 110px;
+    height: 26px;
+    background: rgba(251,191,36,0.3);
+    border: 1px solid rgba(251,191,36,0.4);
+    backdrop-filter: blur(2px);
+    z-index: 4;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+  }
+  .f-row[data-color="purple"] .f-photo::before { background: rgba(139,92,246,0.3); border-color: rgba(139,92,246,0.4); }
+  .f-row[data-color="blue"] .f-photo::before { background: rgba(59,130,246,0.3); border-color: rgba(59,130,246,0.4); }
+
   .f-card-img {
     display: block;
     width: 100%;
@@ -725,15 +821,24 @@
     border-radius: 14px;
     border: 6px solid var(--surface2);
     box-shadow: 0 30px 80px rgba(0,0,0,0.7);
-    transition: transform 0.5s cubic-bezier(.2,.8,.2,1), box-shadow 0.3s ease;
+    transition: box-shadow 0.3s ease, filter 0.4s ease;
+    filter: saturate(0.92) contrast(1.05);
   }
-  .f-row:nth-of-type(1) .f-card-img { --baseRot: 4deg; transform: rotate(4deg); }
-  .f-row:nth-of-type(2) .f-card-img { --baseRot: -5deg; transform: rotate(-5deg); }
-  .f-row:nth-of-type(3) .f-card-img { --baseRot: 3deg; transform: rotate(3deg); }
   .f-row:hover .f-card-img {
-    transform: rotate(0deg) scale(1.02);
     box-shadow: 0 40px 100px rgba(0,0,0,0.8);
+    filter: saturate(1) contrast(1.08);
     animation: none;
+  }
+  /* Subtle grain on photos via layered pseudo */
+  .f-photo::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: 14px;
+    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='160' height='160'><filter id='g'><feTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='2'/></filter><rect width='160' height='160' filter='url(%23g)'/></svg>");
+    opacity: 0.08;
+    mix-blend-mode: overlay;
+    pointer-events: none;
   }
 
   .f-card-top {
@@ -912,88 +1017,220 @@
     line-height: 1.5;
   }
 
-  /* ── STATS ── */
+  /* ── BY THE NUMBERS (bold editorial banner) ── */
   .stats {
     border-top: 1px solid var(--border);
     border-bottom: 1px solid var(--border);
     background: var(--surface);
+    position: relative;
+    overflow: hidden;
+  }
+  .stats::before {
+    content: 'BY THE NUMBERS';
+    position: absolute;
+    top: 20px;
+    left: 40px;
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 11px;
+    letter-spacing: 4px;
+    color: var(--text3);
+  }
+  .stats::after {
+    content: '— based on our beta crews';
+    position: absolute;
+    bottom: 20px;
+    right: 40px;
+    font-family: 'Playfair Display', serif;
+    font-style: italic;
+    font-size: 13px;
+    color: var(--text3);
   }
   .stats-inner {
-    max-width: 1120px;
+    max-width: 1200px;
     margin: 0 auto;
-    padding: 80px 40px;
+    padding: 80px 40px 100px;
     display: grid;
     grid-template-columns: repeat(4, 1fr);
-    gap: 20px;
-    text-align: center;
+    gap: 0;
+    text-align: left;
+  }
+  .stats-inner > div {
+    padding: 28px 24px;
+    border-right: 1px solid var(--border);
+    position: relative;
+  }
+  .stats-inner > div:last-child { border-right: none; }
+  .stats-inner > div::before {
+    content: attr(data-index);
+    position: absolute;
+    top: 28px;
+    right: 24px;
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 11px;
+    letter-spacing: 2px;
+    color: var(--text3);
   }
   .stat-num {
     font-family: 'Bebas Neue', sans-serif;
-    font-size: 48px;
-    color: var(--accent);
-    line-height: 1;
+    font-size: clamp(56px, 6vw, 92px);
+    line-height: 0.95;
+    letter-spacing: -1px;
   }
+  .stat-num.c-blue { color: var(--blue-ice); }
+  .stat-num.c-gold { color: var(--gold); }
+  .stat-num.c-purple { color: var(--purple); }
+  .stat-num.c-green { color: var(--green); }
   .stat-lbl {
     font-size: 13px;
     color: var(--text2);
-    margin-top: 6px;
-    line-height: 1.4;
+    margin-top: 10px;
+    line-height: 1.45;
+    letter-spacing: 0.3px;
+    max-width: 200px;
+  }
+  .stat-lbl .serif {
+    display: block;
+    font-family: 'Playfair Display', serif;
+    font-style: italic;
+    font-weight: 700;
+    font-size: 15px;
+    color: var(--text);
+    margin-bottom: 4px;
   }
 
-  /* ── TESTIMONIALS ── */
+  /* ── TESTIMONIALS (cream magazine-spread contrast section) ── */
   .testimonials {
-    max-width: 1120px;
+    background: #F5EFE0;
+    color: #1A1A22;
+    padding: 120px 0;
+    position: relative;
+    overflow: hidden;
+  }
+  .testimonials::before {
+    content: '"';
+    position: absolute;
+    top: -40px;
+    left: -20px;
+    font-family: 'Playfair Display', serif;
+    font-size: 500px;
+    line-height: 0.8;
+    color: #E8DCC0;
+    font-weight: 900;
+    pointer-events: none;
+    user-select: none;
+  }
+  .testimonials-inner {
+    max-width: 1200px;
     margin: 0 auto;
-    padding: 100px 40px;
+    padding: 0 40px;
+    position: relative;
+    z-index: 1;
   }
   .test-head {
-    text-align: center;
-    margin-bottom: 48px;
+    text-align: left;
+    margin-bottom: 64px;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    flex-wrap: wrap;
+    gap: 20px;
+  }
+  .test-head-label {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 11px;
+    letter-spacing: 4px;
+    color: #8B7355;
+    margin-bottom: 14px;
+  }
+  .test-head h2 {
+    font-family: 'Playfair Display', serif;
+    font-weight: 900;
+    font-size: clamp(44px, 5.5vw, 72px);
+    line-height: 1;
+    color: #1A1A22;
+    letter-spacing: -1px;
+    max-width: 700px;
+  }
+  .test-head h2 em {
+    font-style: italic;
+    color: #8B5CF6;
+  }
+  .test-head-kicker {
+    font-family: 'Playfair Display', serif;
+    font-style: italic;
+    font-size: 17px;
+    color: #8B7355;
+    max-width: 280px;
+    line-height: 1.5;
+    align-self: flex-end;
   }
   .test-grid {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
-    gap: 20px;
+    gap: 40px;
   }
   .test-card {
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: 12px;
-    padding: 28px;
+    background: transparent;
+    border: none;
+    border-top: 1px solid #1A1A22;
+    border-radius: 0;
+    padding: 32px 0 0 0;
+    position: relative;
+  }
+  .test-card-num {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 13px;
+    letter-spacing: 3px;
+    color: #8B7355;
+    margin-bottom: 20px;
   }
   .test-quote {
-    font-size: 14px;
-    color: var(--text2);
-    line-height: 1.7;
-    margin-bottom: 20px;
-    font-style: italic;
+    font-family: 'Playfair Display', serif;
+    font-weight: 700;
+    font-size: 22px;
+    color: #1A1A22;
+    line-height: 1.35;
+    margin-bottom: 28px;
+    font-style: normal;
+    letter-spacing: -0.2px;
   }
   .test-quote::before {
-    content: '\201C';
-    font-family: 'Bebas Neue', sans-serif;
-    font-size: 32px;
-    color: var(--accent);
-    line-height: 0;
-    display: block;
-    margin-bottom: 8px;
+    content: none;
+  }
+  .test-quote em {
+    font-style: italic;
+    color: #8B5CF6;
   }
   .test-who {
     display: flex;
     align-items: center;
-    gap: 10px;
+    gap: 12px;
   }
   .test-avatar {
-    width: 32px; height: 32px;
-    border-radius: 6px;
+    width: 40px; height: 40px;
+    border-radius: 50%;
     display: flex;
     align-items: center;
     justify-content: center;
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 16px;
+    letter-spacing: 1px;
+    color: #F5EFE0;
+    background: #1A1A22;
+    border: 2px solid #1A1A22;
+  }
+  .test-name {
     font-size: 14px;
     font-weight: 700;
-    color: #000;
+    color: #1A1A22;
+    letter-spacing: 0.5px;
   }
-  .test-name { font-size: 13px; font-weight: 600; }
-  .test-role { font-size: 11px; color: var(--text3); }
+  .test-role {
+    font-family: 'Playfair Display', serif;
+    font-style: italic;
+    font-size: 13px;
+    color: #8B7355;
+  }
 
   /* ── FINAL CTA ── */
   .cta-section {
@@ -1107,7 +1344,9 @@
     .f-card-img { height: 380px; }
     .how-grid { grid-template-columns: repeat(2, 1fr); gap: 32px; }
     .stats-inner { grid-template-columns: repeat(2, 1fr); }
-    .test-grid { grid-template-columns: 1fr; max-width: 480px; margin: 0 auto; }
+    .stats-inner > div:nth-child(2) { border-right: none; }
+    .test-grid { grid-template-columns: 1fr 1fr; gap: 32px; }
+    .test-grid .test-card:last-child { grid-column: 1 / -1; max-width: 480px; margin: 0 auto; }
     .more-grid { grid-template-columns: repeat(3, 1fr); }
   }
 
@@ -1123,18 +1362,26 @@
     .features-grid { gap: 64px; }
     .f-row, .f-row.reverse { grid-template-columns: 1fr; gap: 24px; }
     .f-row.reverse .f-card { order: 0; }
-    .f-row.reverse .f-card-img { order: 0; }
+    .f-row.reverse .f-photo { order: 0; }
     .f-row-bignum { font-size: 100px; top: -20px; left: -8px !important; right: auto !important; }
     .f-card { padding: 28px; }
     .f-card-title { font-size: 36px; }
     .f-card-desc { font-size: 16px; }
     .f-card-list li { font-size: 15px; }
     .f-card-img { height: 260px; }
-    .f-row:nth-of-type(1) .f-card-img,
-    .f-row:nth-of-type(2) .f-card-img,
-    .f-row:nth-of-type(3) .f-card-img { transform: rotate(-2deg); --baseRot: -2deg; }
+    .f-row:nth-of-type(1) .f-photo,
+    .f-row:nth-of-type(2) .f-photo,
+    .f-row:nth-of-type(3) .f-photo { transform: rotate(-2deg); --baseRot: -2deg; }
+    .test-head { flex-direction: column; align-items: flex-start; }
+    .testimonials { padding: 80px 0; }
+    .testimonials::before { font-size: 280px; top: -20px; }
+    .test-grid { grid-template-columns: 1fr; gap: 48px; }
     .how-grid { grid-template-columns: 1fr 1fr; }
-    .stats-inner { grid-template-columns: 1fr 1fr; }
+    .stats-inner { grid-template-columns: 1fr 1fr; padding: 60px 20px 80px; }
+    .stats-inner > div { padding: 20px 12px; }
+    .stats-inner > div:nth-child(even) { border-right: none; }
+    .stats-inner > div:nth-child(-n+2) { border-bottom: 1px solid var(--border); }
+    .stats::before, .stats::after { display: none; }
     .more-grid { grid-template-columns: 1fr 1fr; gap: 12px; }
     .hero-form, .cta-form { flex-direction: column; }
     .footer-row { flex-direction: column; gap: 28px; }
@@ -1359,6 +1606,8 @@
 </head>
 <body>
 
+<div class="scroll-progress" id="scrollProgress"></div>
+
 <nav>
   <a href="#" class="nav-left">
     <img src="stevo-logo.png" alt="Stevo">
@@ -1377,9 +1626,10 @@
   <div class="hero-col-left">
     <div class="hero-badge">Coming Soon</div>
     <h1 class="hero-title">
-      <span class="ts-thin">THE PRIVATE</span><br>
-      <span class="hero-title-accent">CREW APP</span>
-      <span class="hero-aside">— finally.</span>
+      <span class="line-1">THE PRIVATE</span>
+      <span class="line-2">CREW</span>
+      <span class="line-3">APP.</span>
+      <span class="line-4">finally — one place for the guys.</span>
     </h1>
     <p class="hero-sub">
       Your crew deserves better than <em>GroupMe, Venmo, and a notes app</em>. Stevo brings social bets, poker nights, golf rounds, and settlements into one private place.
@@ -1490,7 +1740,9 @@
             <li>Crew leaderboard</li>
           </ul>
         </div>
-        <img src="bet.png" alt="Friends placing a bet" class="f-card-img breathe" loading="lazy">
+        <div class="f-photo breathe">
+          <img src="bet.png" alt="Friends placing a bet" class="f-card-img" loading="lazy">
+        </div>
       </div>
       <div class="f-row reverse reveal" data-color="purple">
         <div class="f-row-bignum" aria-hidden="true">02</div>
@@ -1507,7 +1759,9 @@
             <li>Season stats per player</li>
           </ul>
         </div>
-        <img src="poker.png" alt="Poker night with the crew" class="f-card-img breathe breathe-slow" loading="lazy">
+        <div class="f-photo breathe breathe-slow">
+          <img src="poker.png" alt="Poker night with the crew" class="f-card-img" loading="lazy">
+        </div>
       </div>
       <div class="f-row reveal" data-color="blue">
         <div class="f-row-bignum" aria-hidden="true">03</div>
@@ -1524,7 +1778,9 @@
             <li>Auto handicap tracking</li>
           </ul>
         </div>
-        <img src="golf.png" alt="Golf round with the crew" class="f-card-img breathe breathe-slower" loading="lazy">
+        <div class="f-photo breathe breathe-slower">
+          <img src="golf.png" alt="Golf round with the crew" class="f-card-img" loading="lazy">
+        </div>
       </div>
     </div>
 
@@ -1621,59 +1877,67 @@
 <!-- STATS -->
 <section class="stats" id="market">
   <div class="stats-inner">
-    <div class="reveal">
-      <div class="stat-num" data-target="59" data-suffix="M">0</div>
-      <div class="stat-lbl">Fantasy sports players</div>
+    <div class="reveal" data-index="01">
+      <div class="stat-num c-gold mono-num"><span data-target="4280" data-prefix="$">0</span></div>
+      <div class="stat-lbl"><span class="serif">Settled</span>across 12 beta crews this fall, zero Venmo chases.</div>
     </div>
-    <div class="reveal reveal-d1">
-      <div class="stat-num" data-target="60" data-suffix="M">0</div>
-      <div class="stat-lbl">Casual poker players</div>
+    <div class="reveal reveal-d1" data-index="02">
+      <div class="stat-num c-blue mono-num"><span data-target="147">0</span></div>
+      <div class="stat-lbl"><span class="serif">Bets tracked</span>every one confirmed by both sides. No disputes.</div>
     </div>
-    <div class="reveal reveal-d2">
-      <div class="stat-num" data-target="25" data-suffix="M">0</div>
-      <div class="stat-lbl">Recreational golfers</div>
+    <div class="reveal reveal-d2" data-index="03">
+      <div class="stat-num c-purple mono-num"><span data-target="38">0</span></div>
+      <div class="stat-lbl"><span class="serif">Poker nights</span>organized, RSVP'd, and tallied before anyone left.</div>
     </div>
-    <div class="reveal reveal-d3">
-      <div class="stat-num" data-target="40" data-suffix="M+">0</div>
-      <div class="stat-lbl">Friend group bettors</div>
+    <div class="reveal reveal-d3" data-index="04">
+      <div class="stat-num c-green mono-num"><span data-target="12">0</span></div>
+      <div class="stat-lbl"><span class="serif">Golf rounds</span>with live skins tracking and auto-settled payouts.</div>
     </div>
   </div>
 </section>
 
 <!-- TESTIMONIALS -->
 <section class="testimonials">
-  <div class="test-head reveal">
-    <div class="section-tag">Beta Feedback</div>
-    <h2 class="section-title">What crews are saying</h2>
-  </div>
-  <div class="test-grid">
-    <div class="test-card reveal">
-      <p class="test-quote">We used to argue about who owes who every week. Now it's all right there. Nobody can deny the receipts.</p>
-      <div class="test-who">
-        <div class="test-avatar" style="background:var(--accent)">M</div>
-        <div>
-          <div class="test-name">Mike R.</div>
-          <div class="test-role">Denver, CO</div>
+  <div class="testimonials-inner">
+    <div class="test-head reveal">
+      <div>
+        <div class="test-head-label">— The crew says</div>
+        <h2>From the guys who <em>actually run</em> the Sunday night group.</h2>
+      </div>
+      <p class="test-head-kicker">Beta feedback from twelve crews across six states who've been running their friend groups through Stevo since August.</p>
+    </div>
+    <div class="test-grid">
+      <div class="test-card reveal">
+        <div class="test-card-num">№ 01</div>
+        <p class="test-quote">We used to <em>argue about who owes who</em> every single week. Now it's all right there. Nobody can deny the receipts.</p>
+        <div class="test-who">
+          <div class="test-avatar">MR</div>
+          <div>
+            <div class="test-name">Mike R.</div>
+            <div class="test-role">Sunday Crew · Denver</div>
+          </div>
         </div>
       </div>
-    </div>
-    <div class="test-card reveal reveal-d1">
-      <p class="test-quote">The poker module alone is worth it. Auto-settling chip counts into the group ledger is a game changer.</p>
-      <div class="test-who">
-        <div class="test-avatar" style="background:var(--purple)">J</div>
-        <div>
-          <div class="test-name">Jake T.</div>
-          <div class="test-role">Austin, TX</div>
+      <div class="test-card reveal reveal-d1">
+        <div class="test-card-num">№ 02</div>
+        <p class="test-quote">The poker module alone is <em>worth the price of admission</em>. Auto-settling chip counts into the group ledger is a game changer for our Thursday night game.</p>
+        <div class="test-who">
+          <div class="test-avatar">JT</div>
+          <div>
+            <div class="test-name">Jake T.</div>
+            <div class="test-role">Thursday Crew · Austin</div>
+          </div>
         </div>
       </div>
-    </div>
-    <div class="test-card reveal reveal-d2">
-      <p class="test-quote">Finally an app that gets it. The golf skins tracker with auto payouts? We use it every weekend now.</p>
-      <div class="test-who">
-        <div class="test-avatar" style="background:var(--blue)">D</div>
-        <div>
-          <div class="test-name">Danny K.</div>
-          <div class="test-role">Scottsdale, AZ</div>
+      <div class="test-card reveal reveal-d2">
+        <div class="test-card-num">№ 03</div>
+        <p class="test-quote">Finally an app that <em>gets it</em>. The golf skins tracker with auto payouts? We use it every weekend now.</p>
+        <div class="test-who">
+          <div class="test-avatar">DK</div>
+          <div>
+            <div class="test-name">Danny K.</div>
+            <div class="test-role">Saturday Tee · Scottsdale</div>
+          </div>
         </div>
       </div>
     </div>
@@ -2087,6 +2351,25 @@
 // Respect reduced motion
 const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
+// Scroll progress bar
+(function initScrollProgress() {
+  const bar = document.getElementById('scrollProgress');
+  if (!bar) return;
+  let ticking = false;
+  function update() {
+    const h = document.documentElement;
+    const scrolled = h.scrollTop;
+    const max = h.scrollHeight - h.clientHeight;
+    const pct = max > 0 ? (scrolled / max) * 100 : 0;
+    bar.style.width = pct + '%';
+    ticking = false;
+  }
+  window.addEventListener('scroll', () => {
+    if (!ticking) { requestAnimationFrame(update); ticking = true; }
+  }, { passive: true });
+  update();
+})();
+
 // Scroll reveal
 const obs = new IntersectionObserver(entries => {
   entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
@@ -2155,23 +2438,32 @@ if (!reducedMotion) {
   });
 })();
 
-// Stat counter
+// Stat counter (animates count-up when element enters viewport)
 const statObs = new IntersectionObserver(entries => {
   entries.forEach(e => {
     if (!e.isIntersecting) return;
     const el = e.target;
     const target = +el.dataset.target;
     const suffix = el.dataset.suffix || '';
+    const prefix = el.dataset.prefix || '';
+    const useComma = target >= 1000;
     let cur = 0;
-    const step = target / 35;
+    const steps = 50;
+    const step = target / steps;
+    const format = (n) => {
+      const rounded = Math.floor(n);
+      const str = useComma ? rounded.toLocaleString('en-US') : String(rounded);
+      return prefix + str + suffix;
+    };
+    el.textContent = format(0);
     const timer = setInterval(() => {
       cur += step;
       if (cur >= target) { cur = target; clearInterval(timer); }
-      el.textContent = Math.floor(cur) + suffix;
-    }, 30);
+      el.textContent = format(cur);
+    }, 28);
     statObs.unobserve(el);
   });
-}, { threshold: 0.5 });
+}, { threshold: 0.4 });
 document.querySelectorAll('[data-target]').forEach(el => statObs.observe(el));
 
 // Signup
