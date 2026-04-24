@@ -6,7 +6,7 @@
 <title>Stevo — The Private Crew App</title>
 <meta name="description" content="Stevo is the private crew app for guys. Social bets, poker nights, golf, and more — all in one place for your crew.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Chakra+Petch:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Caveat:wght@500;700&family=Chakra+Petch:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 <style>
   :root {
     --bg: #0A0A10;
@@ -16,12 +16,19 @@
     --accent: #2563EB;
     --accent-hover: #1D4ED8;
     --red: #EF4444;
+    --red-deep: #B91C1C;
     --blue: #3B82F6;
+    --blue-ice: #60A5FA;
     --purple: #8B5CF6;
     --gold: #FBBF24;
+    --gold-deep: #D97706;
+    --green: #22C55E;
+    --green-deep: #16A34A;
+    --cream: #FEF3C7;
     --text: #E2E8F0;
     --text2: #94A3B8;
     --text3: #475569;
+    --text4: #1E293B;
   }
 
   * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -48,6 +55,94 @@
 
   @media (prefers-reduced-motion: reduce) {
     .reveal { opacity: 1; transform: none; transition: none; }
+    .parallax { transform: none !important; }
+    .breathe { animation: none !important; }
+  }
+
+  /* ── TYPOGRAPHY HELPERS ── */
+  .script {
+    font-family: 'Caveat', cursive;
+    font-weight: 700;
+    font-style: normal;
+    letter-spacing: 0;
+  }
+  .ts-thin {
+    font-weight: 300;
+  }
+  .mono-num {
+    font-variant-numeric: tabular-nums;
+    letter-spacing: -0.02em;
+  }
+
+  /* ── SIGNATURE WATERMARK (decorative suit symbols at section edges) ── */
+  .watermark {
+    position: absolute;
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(120px, 18vw, 260px);
+    line-height: 1;
+    color: var(--surface2);
+    pointer-events: none;
+    user-select: none;
+    opacity: 0.6;
+    z-index: 0;
+  }
+  .watermark-digit {
+    font-size: clamp(180px, 22vw, 340px);
+    color: transparent;
+    -webkit-text-stroke: 2px var(--surface2);
+    text-stroke: 2px var(--surface2);
+    font-weight: 400;
+  }
+
+  /* ── BREATHING / FLOATING ANIMATIONS (slow, natural) ── */
+  @keyframes breathe {
+    0%, 100% { transform: translateY(0) rotate(var(--baseRot, 0deg)); }
+    50% { transform: translateY(-10px) rotate(calc(var(--baseRot, 0deg) + 0.3deg)); }
+  }
+  .breathe {
+    animation: breathe 7s ease-in-out infinite;
+  }
+  .breathe-slow { animation-duration: 9s; }
+  .breathe-slower { animation-duration: 11s; }
+
+  /* ── LETTER REVEAL ── */
+  .letter-reveal {
+    display: inline-block;
+  }
+  .letter-reveal .char {
+    display: inline-block;
+    opacity: 0;
+    transform: translateY(30px);
+    animation: charReveal 0.7s cubic-bezier(.2,.8,.2,1) forwards;
+  }
+  @keyframes charReveal {
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  /* ── EDITORIAL UNDERLINE (swipes in on hover/reveal) ── */
+  .swipe-underline {
+    position: relative;
+    display: inline-block;
+  }
+  .swipe-underline::after {
+    content: '';
+    position: absolute;
+    bottom: -6px;
+    left: 0;
+    width: 100%;
+    height: 4px;
+    background: var(--accent);
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 0.5s cubic-bezier(.2,.8,.2,1);
+    border-radius: 2px;
+  }
+  .swipe-underline.gold::after { background: var(--gold); }
+  .swipe-underline.red::after { background: var(--red); }
+  .swipe-underline.green::after { background: var(--green); }
+  .swipe-underline.visible::after,
+  .swipe-underline:hover::after {
+    transform: scaleX(1);
   }
 
   /* ── NAV ── */
@@ -113,21 +208,41 @@
 
   /* ── HERO ── */
   .hero {
-    max-width: 1120px;
+    max-width: 1200px;
     margin: 0 auto;
     padding: 140px 40px 100px;
     display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 80px;
+    grid-template-columns: 1.15fr 1fr;
+    gap: 60px;
     align-items: center;
+    position: relative;
+    overflow: visible;
   }
+  /* Oversized decorative numeral behind the hero */
+  .hero-decor {
+    position: absolute;
+    top: 10%;
+    right: -4%;
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(260px, 36vw, 520px);
+    line-height: 0.8;
+    letter-spacing: -0.04em;
+    color: transparent;
+    -webkit-text-stroke: 2px var(--surface2);
+    text-stroke: 2px var(--surface2);
+    pointer-events: none;
+    user-select: none;
+    z-index: 0;
+    transition: transform 0.2s linear;
+  }
+  .hero > * { position: relative; z-index: 1; }
 
   .hero-badge {
     display: inline-flex;
     align-items: center;
     gap: 8px;
-    background: rgba(245,158,11,0.08);
-    border: 1px solid rgba(245,158,11,0.2);
+    background: rgba(37,99,235,0.08);
+    border: 1px solid rgba(37,99,235,0.25);
     border-radius: 6px;
     padding: 5px 12px;
     font-size: 11px;
@@ -135,32 +250,71 @@
     letter-spacing: 2px;
     text-transform: uppercase;
     color: var(--accent);
-    margin-bottom: 24px;
+    margin-bottom: 28px;
   }
   .hero-badge::before {
     content: '';
     width: 6px; height: 6px;
     background: var(--accent);
     border-radius: 50%;
+    animation: badgePulse 2.2s ease-in-out infinite;
+  }
+  @keyframes badgePulse {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.5; transform: scale(0.7); }
   }
 
   .hero-title {
     font-family: 'Bebas Neue', sans-serif;
-    font-size: clamp(56px, 7vw, 88px);
-    line-height: 0.92;
-    letter-spacing: 2px;
-    margin-bottom: 20px;
+    font-size: clamp(64px, 8.5vw, 116px);
+    line-height: 0.88;
+    letter-spacing: 1.5px;
+    margin-bottom: 22px;
+  }
+  .hero-title .ts-thin {
+    color: var(--text2);
+    font-weight: 300;
   }
   .hero-title-accent {
-    color: var(--accent);
+    background: linear-gradient(135deg, var(--blue-ice) 0%, var(--accent) 60%, var(--purple) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    background-size: 200% 200%;
+    animation: gradShift 8s ease-in-out infinite;
+  }
+  @keyframes gradShift {
+    0%, 100% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+  }
+
+  /* Handwritten aside (script font accent) */
+  .hero-aside {
+    font-family: 'Caveat', cursive;
+    font-weight: 700;
+    font-size: 22px;
+    color: var(--gold);
+    transform: rotate(-4deg);
+    display: inline-block;
+    margin-left: 10px;
+    vertical-align: middle;
+    position: relative;
+    top: -6px;
   }
 
   .hero-sub {
-    font-size: 16px;
+    font-size: 17px;
     color: var(--text2);
-    line-height: 1.7;
+    line-height: 1.65;
     margin-bottom: 36px;
-    max-width: 420px;
+    max-width: 460px;
+  }
+  .hero-sub em {
+    font-style: normal;
+    color: var(--text);
+    font-weight: 500;
+    background: linear-gradient(120deg, transparent 40%, rgba(37,99,235,0.18) 40%, rgba(37,99,235,0.18) 90%, transparent 90%);
+    padding: 0 2px;
   }
 
   .hero-form {
@@ -457,6 +611,24 @@
     flex-direction: column;
     gap: 120px;
     padding-top: 0;
+    position: relative;
+  }
+  /* Vertical spine connecting the feature rows */
+  .features-grid::before {
+    content: '';
+    position: absolute;
+    top: 40px;
+    bottom: 40px;
+    left: 50%;
+    width: 2px;
+    background: linear-gradient(180deg,
+      transparent 0%,
+      var(--border) 8%,
+      var(--border) 92%,
+      transparent 100%);
+    transform: translateX(-1px);
+    z-index: 0;
+    pointer-events: none;
   }
 
   /* Each row holds the box and the picture as siblings */
@@ -467,6 +639,51 @@
     align-items: center;
     position: relative;
   }
+  /* Row number marker centered on the spine */
+  .f-row-num {
+    position: absolute;
+    left: 50%;
+    top: -38px;
+    transform: translateX(-50%);
+    width: 68px;
+    height: 68px;
+    border-radius: 50%;
+    background: var(--bg);
+    border: 2px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 26px;
+    letter-spacing: 0;
+    color: var(--text3);
+    z-index: 3;
+    transition: border-color 0.3s ease, color 0.3s ease, transform 0.3s ease;
+  }
+  .f-row:hover .f-row-num {
+    transform: translateX(-50%) scale(1.08);
+  }
+  .f-row[data-color="gold"]:hover .f-row-num { border-color: var(--gold); color: var(--gold); }
+  .f-row[data-color="purple"]:hover .f-row-num { border-color: var(--purple); color: var(--purple); }
+  .f-row[data-color="blue"]:hover .f-row-num { border-color: var(--blue); color: var(--blue); }
+
+  /* Giant outlined numeral as decorative watermark next to each feature row */
+  .f-row-bignum {
+    position: absolute;
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(160px, 22vw, 320px);
+    line-height: 0.8;
+    color: transparent;
+    -webkit-text-stroke: 2px var(--surface2);
+    text-stroke: 2px var(--surface2);
+    pointer-events: none;
+    user-select: none;
+    z-index: 0;
+    opacity: 0.9;
+  }
+  .f-row:not(.reverse) .f-row-bignum { left: -40px; top: -60px; }
+  .f-row.reverse .f-row-bignum { right: -40px; top: -60px; }
+
   /* Even rows reverse: image on left, box on right */
   .f-row.reverse {
     grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr);
@@ -479,13 +696,16 @@
     border: 1px solid var(--border);
     border-radius: 14px;
     padding: 44px 40px;
-    transition: border-color 0.2s;
+    transition: border-color 0.3s ease, transform 0.3s ease;
     min-width: 0;
     position: relative;
     z-index: 2;
     box-shadow: 0 24px 60px rgba(0,0,0,0.5);
   }
-  .f-card:hover { border-color: var(--text3); }
+  .f-row:hover .f-card { border-color: var(--text3); transform: translateY(-3px); }
+  .f-row[data-color="gold"]:hover .f-card { border-color: rgba(251,191,36,0.35); }
+  .f-row[data-color="purple"]:hover .f-card { border-color: rgba(139,92,246,0.35); }
+  .f-row[data-color="blue"]:hover .f-card { border-color: rgba(59,130,246,0.35); }
 
   /* Image sits OUTSIDE the box, with its own border + shadow */
   .f-card-img {
@@ -496,14 +716,15 @@
     border-radius: 14px;
     border: 6px solid var(--surface2);
     box-shadow: 0 30px 80px rgba(0,0,0,0.7);
-    transition: transform 0.4s ease, box-shadow 0.3s ease;
+    transition: transform 0.5s cubic-bezier(.2,.8,.2,1), box-shadow 0.3s ease;
   }
-  .f-row:nth-of-type(1) .f-card-img { transform: rotate(4deg); }
-  .f-row:nth-of-type(2) .f-card-img { transform: rotate(-5deg); }
-  .f-row:nth-of-type(3) .f-card-img { transform: rotate(3deg); }
+  .f-row:nth-of-type(1) .f-card-img { --baseRot: 4deg; transform: rotate(4deg); }
+  .f-row:nth-of-type(2) .f-card-img { --baseRot: -5deg; transform: rotate(-5deg); }
+  .f-row:nth-of-type(3) .f-card-img { --baseRot: 3deg; transform: rotate(3deg); }
   .f-row:hover .f-card-img {
     transform: rotate(0deg) scale(1.02);
     box-shadow: 0 40px 100px rgba(0,0,0,0.8);
+    animation: none;
   }
 
   .f-card-top {
@@ -511,18 +732,53 @@
     height: 24px;
     border-radius: 2px;
     margin-bottom: 20px;
+    transition: width 0.3s ease, height 0.3s ease;
   }
-  .f-card-top.amber { background: var(--accent); }
+  .f-row:hover .f-card-top { width: 32px; height: 4px; }
+  .f-card-top.amber { background: var(--gold); }
   .f-card-top.purple { background: var(--purple); }
   .f-card-top.blue { background: var(--blue); }
 
+  .f-card-tag {
+    font-family: 'Caveat', cursive;
+    font-weight: 700;
+    font-size: 20px;
+    color: var(--text3);
+    margin-bottom: 4px;
+    display: block;
+    transform: rotate(-2deg);
+    transform-origin: left center;
+  }
+  .f-row[data-color="gold"] .f-card-tag { color: var(--gold); }
+  .f-row[data-color="purple"] .f-card-tag { color: var(--purple); }
+  .f-row[data-color="blue"] .f-card-tag { color: var(--blue-ice); }
+
   .f-card-title {
     font-family: 'Bebas Neue', sans-serif;
-    font-size: 42px;
+    font-size: 48px;
     letter-spacing: 1.5px;
     margin-bottom: 14px;
     line-height: 1;
+    position: relative;
+    display: inline-block;
   }
+  .f-card-title::after {
+    content: '';
+    position: absolute;
+    bottom: -6px;
+    left: 0;
+    width: 100%;
+    height: 3px;
+    border-radius: 2px;
+    background: var(--accent);
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 0.5s cubic-bezier(.2,.8,.2,1);
+  }
+  .f-row[data-color="gold"] .f-card-title::after { background: var(--gold); }
+  .f-row[data-color="purple"] .f-card-title::after { background: var(--purple); }
+  .f-row[data-color="blue"] .f-card-title::after { background: var(--blue); }
+  .f-row:hover .f-card-title::after { transform: scaleX(1); }
   .f-card-desc {
     font-size: 17px;
     color: var(--text2);
@@ -830,10 +1086,15 @@
   @media (max-width: 1024px) {
     .hero { grid-template-columns: 1fr; gap: 48px; padding-top: 120px; }
     .hero-carousel { order: -1; }
+    .hero-decor { font-size: clamp(200px, 40vw, 320px); right: -10%; top: -5%; opacity: 0.6; }
     .problem-grid { grid-template-columns: repeat(3, 1fr); }
-    .features-grid { gap: 80px; }
+    .features-grid { gap: 90px; }
+    .features-grid::before { display: none; }
+    .f-row-num { display: none; }
+    .f-row-bignum { font-size: clamp(120px, 18vw, 200px); }
     .f-row { gap: 32px; }
     .f-card { padding: 28px; }
+    .f-card-title { font-size: 42px; }
     .f-card-img { height: 380px; }
     .how-grid { grid-template-columns: repeat(2, 1fr); gap: 32px; }
     .stats-inner { grid-template-columns: repeat(2, 1fr); }
@@ -847,11 +1108,14 @@
     .hero, .problem, .how, .testimonials, .cta-section { padding-left: 20px; padding-right: 20px; }
     .features-inner, .stats-inner, footer { padding-left: 20px; padding-right: 20px; }
     .hero { padding-top: 100px; }
+    .hero-decor { display: none; }
+    .hero-aside { display: block; margin-left: 0; margin-top: 4px; font-size: 20px; }
     .problem-grid { grid-template-columns: 1fr 1fr; }
-    .features-grid { gap: 56px; }
+    .features-grid { gap: 64px; }
     .f-row, .f-row.reverse { grid-template-columns: 1fr; gap: 24px; }
     .f-row.reverse .f-card { order: 0; }
     .f-row.reverse .f-card-img { order: 0; }
+    .f-row-bignum { font-size: 100px; top: -20px; left: -8px !important; right: auto !important; }
     .f-card { padding: 28px; }
     .f-card-title { font-size: 36px; }
     .f-card-desc { font-size: 16px; }
@@ -859,7 +1123,7 @@
     .f-card-img { height: 260px; }
     .f-row:nth-of-type(1) .f-card-img,
     .f-row:nth-of-type(2) .f-card-img,
-    .f-row:nth-of-type(3) .f-card-img { transform: rotate(-2deg); }
+    .f-row:nth-of-type(3) .f-card-img { transform: rotate(-2deg); --baseRot: -2deg; }
     .how-grid { grid-template-columns: 1fr 1fr; }
     .stats-inner { grid-template-columns: 1fr 1fr; }
     .more-grid { grid-template-columns: 1fr 1fr; gap: 12px; }
@@ -1100,14 +1364,27 @@
 
 <!-- HERO -->
 <section class="hero">
+  <div class="hero-decor parallax" data-speed="0.15" aria-hidden="true">S</div>
   <div>
     <div class="hero-badge">Coming Soon</div>
     <h1 class="hero-title">
-      THE PRIVATE<br>
-      <span class="hero-title-accent">CREW APP</span>
+      <span class="letter-reveal" aria-label="The private">
+        <span class="ts-thin">
+          <span class="char" style="animation-delay:0s">T</span><span class="char" style="animation-delay:.04s">H</span><span class="char" style="animation-delay:.08s">E</span>
+          <span class="char" style="animation-delay:.12s">&nbsp;</span>
+          <span class="char" style="animation-delay:.16s">P</span><span class="char" style="animation-delay:.20s">R</span><span class="char" style="animation-delay:.24s">I</span><span class="char" style="animation-delay:.28s">V</span><span class="char" style="animation-delay:.32s">A</span><span class="char" style="animation-delay:.36s">T</span><span class="char" style="animation-delay:.40s">E</span>
+        </span>
+      </span>
+      <br>
+      <span class="letter-reveal hero-title-accent" aria-label="Crew App">
+        <span class="char" style="animation-delay:.50s">C</span><span class="char" style="animation-delay:.55s">R</span><span class="char" style="animation-delay:.60s">E</span><span class="char" style="animation-delay:.65s">W</span>
+        <span class="char" style="animation-delay:.70s">&nbsp;</span>
+        <span class="char" style="animation-delay:.75s">A</span><span class="char" style="animation-delay:.80s">P</span><span class="char" style="animation-delay:.85s">P</span>
+      </span>
+      <span class="hero-aside">— finally.</span>
     </h1>
     <p class="hero-sub">
-      Your crew deserves better than GroupMe, Venmo, and a notes app. Stevo brings social bets, poker nights, golf rounds, and settlements into one private place.
+      Your crew deserves better than <em>GroupMe, Venmo, and a notes app</em>. Stevo brings social bets, poker nights, golf rounds, and settlements into one private place.
     </p>
 
     <div id="hero-wrap">
@@ -1200,9 +1477,12 @@
       <p class="section-desc">Three core modules that handle what your group actually cares about.</p>
     </div>
     <div class="features-grid">
-      <div class="f-row reveal">
+      <div class="f-row reveal" data-color="gold">
+        <div class="f-row-bignum" aria-hidden="true">01</div>
+        <div class="f-row-num" aria-hidden="true">01</div>
         <div class="f-card">
           <div class="f-card-top amber"></div>
+          <span class="f-card-tag">settle up, always</span>
           <div class="f-card-title">Bet Tracker</div>
           <p class="f-card-desc">Challenge any crew member. Both sides confirm terms and outcomes. No more disputed debts.</p>
           <ul class="f-card-list">
@@ -1212,11 +1492,14 @@
             <li>Crew leaderboard</li>
           </ul>
         </div>
-        <img src="bet.png" alt="Friends placing a bet" class="f-card-img" loading="lazy">
+        <img src="bet.png" alt="Friends placing a bet" class="f-card-img breathe" loading="lazy">
       </div>
-      <div class="f-row reverse reveal">
+      <div class="f-row reverse reveal" data-color="purple">
+        <div class="f-row-bignum" aria-hidden="true">02</div>
+        <div class="f-row-num" aria-hidden="true">02</div>
         <div class="f-card">
           <div class="f-card-top purple"></div>
+          <span class="f-card-tag">Thursday nights, sorted</span>
           <div class="f-card-title">Poker Nights</div>
           <p class="f-card-desc">Create games, manage RSVPs, track chips live, and post results that flow into settlements.</p>
           <ul class="f-card-list">
@@ -1226,11 +1509,14 @@
             <li>Season stats per player</li>
           </ul>
         </div>
-        <img src="poker.png" alt="Poker night with the crew" class="f-card-img" loading="lazy">
+        <img src="poker.png" alt="Poker night with the crew" class="f-card-img breathe breathe-slow" loading="lazy">
       </div>
-      <div class="f-row reveal">
+      <div class="f-row reveal" data-color="blue">
+        <div class="f-row-bignum" aria-hidden="true">03</div>
+        <div class="f-row-num" aria-hidden="true">03</div>
         <div class="f-card">
           <div class="f-card-top blue"></div>
+          <span class="f-card-tag">skins, automatic</span>
           <div class="f-card-title">Golf Module</div>
           <p class="f-card-desc">Set up tee times, create side bets, score live, and auto-settle skins when the round ends.</p>
           <ul class="f-card-list">
@@ -1240,7 +1526,7 @@
             <li>Auto handicap tracking</li>
           </ul>
         </div>
-        <img src="golf.png" alt="Golf round with the crew" class="f-card-img" loading="lazy">
+        <img src="golf.png" alt="Golf round with the crew" class="f-card-img breathe breathe-slower" loading="lazy">
       </div>
     </div>
 
@@ -1800,11 +2086,34 @@
 </div>
 
 <script>
+// Respect reduced motion
+const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
 // Scroll reveal
 const obs = new IntersectionObserver(entries => {
   entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
 }, { threshold: 0.15 });
 document.querySelectorAll('.reveal').forEach(el => obs.observe(el));
+
+// Parallax: elements with data-speed move as page scrolls
+if (!reducedMotion) {
+  const parallaxEls = document.querySelectorAll('.parallax');
+  let ticking = false;
+  function updateParallax() {
+    const y = window.scrollY;
+    parallaxEls.forEach(el => {
+      const speed = parseFloat(el.dataset.speed || '0.2');
+      el.style.transform = `translateY(${y * speed * -1}px)`;
+    });
+    ticking = false;
+  }
+  window.addEventListener('scroll', () => {
+    if (!ticking) {
+      requestAnimationFrame(updateParallax);
+      ticking = true;
+    }
+  }, { passive: true });
+}
 
 // Hero carousel (deck-style)
 (function initCarousel() {
