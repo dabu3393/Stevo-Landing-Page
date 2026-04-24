@@ -218,13 +218,13 @@
     position: relative;
     overflow: visible;
   }
-  /* Oversized decorative numeral behind the hero */
+  /* Oversized decorative 'S' behind the carousel */
   .hero-decor {
     position: absolute;
-    top: 10%;
-    right: -4%;
+    top: 20%;
+    right: 4%;
     font-family: 'Bebas Neue', sans-serif;
-    font-size: clamp(260px, 36vw, 520px);
+    font-size: clamp(260px, 30vw, 460px);
     line-height: 0.8;
     letter-spacing: -0.04em;
     color: transparent;
@@ -233,9 +233,9 @@
     pointer-events: none;
     user-select: none;
     z-index: 0;
-    transition: transform 0.2s linear;
+    will-change: transform;
   }
-  .hero > * { position: relative; z-index: 1; }
+  .hero-col-left, .hero-col-right { position: relative; z-index: 2; }
 
   .hero-badge {
     display: inline-flex;
@@ -266,21 +266,30 @@
 
   .hero-title {
     font-family: 'Bebas Neue', sans-serif;
-    font-size: clamp(64px, 8.5vw, 116px);
-    line-height: 0.88;
+    font-size: clamp(52px, 6.5vw, 88px);
+    line-height: 0.9;
     letter-spacing: 1.5px;
     margin-bottom: 22px;
+    opacity: 0;
+    transform: translateY(20px);
+    animation: titleIn 0.8s cubic-bezier(.2,.8,.2,1) 0.1s forwards;
+  }
+  @keyframes titleIn {
+    to { opacity: 1; transform: translateY(0); }
   }
   .hero-title .ts-thin {
     color: var(--text2);
     font-weight: 300;
+    display: inline-block;
   }
   .hero-title-accent {
+    display: inline-block;
     background: linear-gradient(135deg, var(--blue-ice) 0%, var(--accent) 60%, var(--purple) 100%);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
     background-size: 200% 200%;
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    color: transparent;
     animation: gradShift 8s ease-in-out infinite;
   }
   @keyframes gradShift {
@@ -1365,22 +1374,11 @@
 <!-- HERO -->
 <section class="hero">
   <div class="hero-decor parallax" data-speed="0.15" aria-hidden="true">S</div>
-  <div>
+  <div class="hero-col-left">
     <div class="hero-badge">Coming Soon</div>
     <h1 class="hero-title">
-      <span class="letter-reveal" aria-label="The private">
-        <span class="ts-thin">
-          <span class="char" style="animation-delay:0s">T</span><span class="char" style="animation-delay:.04s">H</span><span class="char" style="animation-delay:.08s">E</span>
-          <span class="char" style="animation-delay:.12s">&nbsp;</span>
-          <span class="char" style="animation-delay:.16s">P</span><span class="char" style="animation-delay:.20s">R</span><span class="char" style="animation-delay:.24s">I</span><span class="char" style="animation-delay:.28s">V</span><span class="char" style="animation-delay:.32s">A</span><span class="char" style="animation-delay:.36s">T</span><span class="char" style="animation-delay:.40s">E</span>
-        </span>
-      </span>
-      <br>
-      <span class="letter-reveal hero-title-accent" aria-label="Crew App">
-        <span class="char" style="animation-delay:.50s">C</span><span class="char" style="animation-delay:.55s">R</span><span class="char" style="animation-delay:.60s">E</span><span class="char" style="animation-delay:.65s">W</span>
-        <span class="char" style="animation-delay:.70s">&nbsp;</span>
-        <span class="char" style="animation-delay:.75s">A</span><span class="char" style="animation-delay:.80s">P</span><span class="char" style="animation-delay:.85s">P</span>
-      </span>
+      <span class="ts-thin">THE PRIVATE</span><br>
+      <span class="hero-title-accent">CREW APP</span>
       <span class="hero-aside">— finally.</span>
     </h1>
     <p class="hero-sub">
@@ -1413,7 +1411,7 @@
     </div>
   </div>
 
-  <div class="hero-carousel">
+  <div class="hero-carousel hero-col-right">
     <div class="hero-carousel-stack" id="carousel" role="button" tabindex="0" aria-label="App screenshot — click to see next screen">
       <div class="hero-carousel-slide depth-0" data-slide="0"><img src="screen-1.png" alt="Stevo app screen 1"></div>
       <div class="hero-carousel-slide depth-1" data-slide="1"><img src="screen-2.png" alt="Stevo app screen 2" loading="lazy"></div>
