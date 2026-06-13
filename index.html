@@ -212,6 +212,15 @@
     background: rgba(11,17,32,0.85);
     backdrop-filter: blur(16px);
     border-bottom: 1px solid rgba(255,255,255,0.04);
+    transition: padding 0.3s ease, background 0.3s ease,
+                box-shadow 0.3s ease, border-color 0.3s ease;
+  }
+  /* Condenses and lifts off the page once the user starts scrolling */
+  nav.scrolled {
+    padding: 10px 40px;
+    background: rgba(11,17,32,0.95);
+    border-bottom-color: rgba(255,255,255,0.08);
+    box-shadow: 0 8px 30px rgba(0,0,0,0.45);
   }
 
   .nav-left {
@@ -499,6 +508,7 @@
     justify-content: center;
     flex-direction: column;
     gap: 24px;
+    perspective: 1400px;
   }
   .hero-carousel-stack {
     position: relative;
@@ -509,6 +519,13 @@
     /* Extra space for the peeking cards behind */
     padding-right: 50px;
     padding-bottom: 30px;
+    transform-style: preserve-3d;
+    /* JS feeds live tilt into these vars; eases back to rest on leave */
+    transform: rotateX(var(--tiltX, 0deg)) rotateY(var(--tiltY, 0deg));
+    transition: transform 0.4s cubic-bezier(.2,.8,.2,1);
+  }
+  .hero-carousel-stack.tilting {
+    transition: transform 0.08s linear;
   }
   .hero-carousel-slide {
     position: absolute;
@@ -2354,6 +2371,7 @@ const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matc
 // Scroll progress bar
 (function initScrollProgress() {
   const bar = document.getElementById('scrollProgress');
+  const navEl = document.querySelector('nav');
   if (!bar) return;
   let ticking = false;
   function update() {
@@ -2362,6 +2380,8 @@ const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matc
     const max = h.scrollHeight - h.clientHeight;
     const pct = max > 0 ? (scrolled / max) * 100 : 0;
     bar.style.width = pct + '%';
+    // Condense the nav once the hero starts scrolling away
+    if (navEl) navEl.classList.toggle('scrolled', scrolled > 24);
     ticking = false;
   }
   window.addEventListener('scroll', () => {
@@ -2434,8 +2454,52 @@ if (!reducedMotion) {
     dot.addEventListener('click', (e) => {
       e.stopPropagation();
       showSlide(idx);
+      restartAuto();
     });
   });
+
+  // Auto-advance the deck on a gentle loop, pausing on hover/focus so the
+  // user is never fighting the animation while they explore.
+  let autoTimer = null;
+  const AUTO_MS = 4500;
+  function startAuto() {
+    if (reducedMotion || autoTimer) return;
+    autoTimer = setInterval(() => showSlide(current + 1), AUTO_MS);
+  }
+  function stopAuto() {
+    if (autoTimer) { clearInterval(autoTimer); autoTimer = null; }
+  }
+  function restartAuto() { stopAuto(); startAuto(); }
+
+  ['mouseenter', 'focusin'].forEach(ev => stack.addEventListener(ev, stopAuto));
+  ['mouseleave', 'focusout'].forEach(ev => stack.addEventListener(ev, startAuto));
+  // Pause when the tab is hidden so we don't churn in the background
+  document.addEventListener('visibilitychange', () => {
+    document.hidden ? stopAuto() : startAuto();
+  });
+  startAuto();
+
+  // Restart the loop after any manual interaction so it feels intentional
+  stack.addEventListener('click', restartAuto);
+  stack.addEventListener('keydown', restartAuto);
+
+  // Subtle 3D tilt toward the pointer for a sense of depth
+  if (!reducedMotion) {
+    const MAX_TILT = 7;
+    stack.addEventListener('pointermove', (e) => {
+      const r = stack.getBoundingClientRect();
+      const px = (e.clientX - r.left) / r.width - 0.5;
+      const py = (e.clientY - r.top) / r.height - 0.5;
+      stack.classList.add('tilting');
+      stack.style.setProperty('--tiltY', (px * MAX_TILT * 2).toFixed(2) + 'deg');
+      stack.style.setProperty('--tiltX', (-py * MAX_TILT * 2).toFixed(2) + 'deg');
+    });
+    stack.addEventListener('pointerleave', () => {
+      stack.classList.remove('tilting');
+      stack.style.setProperty('--tiltY', '0deg');
+      stack.style.setProperty('--tiltX', '0deg');
+    });
+  }
 })();
 
 // Stat counter (animates count-up when element enters viewport)
