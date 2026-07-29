@@ -154,17 +154,27 @@
     </div>
 
     <div class="q">
-      <label class="qlabel" for="least_favorite">5. Which one is your <em>least</em> favorite, and what turns you off about it? <span class="opt">(optional)</span></label>
+      <span class="qlabel">5. All three designs use a dark look with green accents. How does that sit with you? <span class="req">*</span></span>
+      <div class="choices" style="grid-template-columns:1fr 1fr">
+        <label class="choice"><input type="radio" name="color_scheme" value="Love it — keep dark + green" required><span>Love it — keep it</span></label>
+        <label class="choice"><input type="radio" name="color_scheme" value="Good, but I'd want a light mode option"><span>Good, but add light mode</span></label>
+        <label class="choice"><input type="radio" name="color_scheme" value="Prefer a light look overall"><span>Prefer a light look</span></label>
+        <label class="choice"><input type="radio" name="color_scheme" value="No strong feelings"><span>No strong feelings</span></label>
+      </div>
+    </div>
+
+    <div class="q">
+      <label class="qlabel" for="least_favorite">6. Which one is your <em>least</em> favorite, and what turns you off about it? <span class="opt">(optional)</span></label>
       <textarea id="least_favorite" name="least_favorite" placeholder="e.g. &quot;C feels cluttered&quot; or &quot;B looks empty&quot;"></textarea>
     </div>
 
     <div class="q">
-      <label class="qlabel" for="confusing_missing">6. Was anything confusing, or is something missing you'd expect on a home screen? <span class="opt">(optional)</span></label>
+      <label class="qlabel" for="confusing_missing">7. Was anything confusing, or is something missing you'd expect on a home screen? <span class="opt">(optional)</span></label>
       <textarea id="confusing_missing" name="confusing_missing" placeholder="Anything that made you go &quot;huh?&quot; or &quot;where's the...&quot;"></textarea>
     </div>
 
     <div class="q">
-      <span class="qlabel">7. How often do you make casual bets with friends (games, golf, poker night, etc.)?</span>
+      <span class="qlabel">8. How often do you make casual bets with friends (games, golf, poker night, etc.)?</span>
       <select name="bet_frequency">
         <option value="">Pick one…</option>
         <option>All the time — weekly or more</option>
@@ -175,7 +185,7 @@
     </div>
 
     <div class="q">
-      <label class="qlabel" for="respondent">8. Your name <span class="opt">(optional — helps us follow up)</span></label>
+      <label class="qlabel" for="respondent">9. Your name <span class="opt">(optional — helps us follow up)</span></label>
       <input type="text" id="respondent" name="respondent" placeholder="First name is fine">
     </div>
 
@@ -206,6 +216,7 @@
       favorite_why: val('favorite_why'),
       easiest_to_use: val('easiest_to_use'),
       most_trustworthy: val('most_trustworthy'),
+      color_scheme: val('color_scheme'),
       least_favorite: val('least_favorite'),
       confusing_missing: val('confusing_missing'),
       bet_frequency: val('bet_frequency'),
