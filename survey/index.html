@@ -161,6 +161,10 @@
         <label class="choice"><input type="radio" name="color_scheme" value="Prefer a light look overall"><span>Prefer a light look</span></label>
         <label class="choice"><input type="radio" name="color_scheme" value="No strong feelings"><span>No strong feelings</span></label>
       </div>
+      <div id="color-followup" style="display:none;margin-top:14px">
+        <label class="qlabel" for="color_scheme_better" style="font-weight:500;font-size:14.5px">What would look better to you? <span class="opt">(optional)</span></label>
+        <textarea id="color_scheme_better" name="color_scheme_better" style="min-height:70px" placeholder="Different colors? Lighter background? A specific app whose look you like?"></textarea>
+      </div>
     </div>
 
     <div class="q">
@@ -201,6 +205,14 @@
   var SB_URL = 'https://sztatmknjyzzyzngvpff.supabase.co/rest/v1/stevo_survey_responses';
   var SB_KEY = 'sb_publishable_GvPXZ8AVgix3aZ2UDS0YRQ_ktlLvMtB';
   var form = document.getElementById('survey-form');
+  var colorFollow = document.getElementById('color-followup');
+  form.querySelectorAll('input[name=color_scheme]').forEach(function(r){
+    r.addEventListener('change', function(){
+      var show = r.value.indexOf('Love it') !== 0;
+      colorFollow.style.display = show ? 'block' : 'none';
+      if (!show) document.getElementById('color_scheme_better').value = '';
+    });
+  });
   form.addEventListener('submit', function(e){
     e.preventDefault();
     if (form.elements['bot-field'].value) return; // honeypot
@@ -217,6 +229,7 @@
       easiest_to_use: val('easiest_to_use'),
       most_trustworthy: val('most_trustworthy'),
       color_scheme: val('color_scheme'),
+      color_scheme_better: val('color_scheme_better'),
       least_favorite: val('least_favorite'),
       confusing_missing: val('confusing_missing'),
       bet_frequency: val('bet_frequency'),
