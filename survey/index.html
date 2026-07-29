@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="robots" content="noindex">
 <title>Stevo — Home Screen Survey</title>
-<link rel="icon" href="../stevo-logo.png" type="image/png">
+<link rel="icon" href="/stevo-logo.png" type="image/png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
@@ -72,7 +72,7 @@
 <div class="wrap">
 
   <header>
-    <img src="../stevo-logo.png" alt="Stevo logo">
+    <img src="/stevo-logo.png" alt="Stevo logo">
     <div class="brand">STEVO</div>
   </header>
 
@@ -90,20 +90,20 @@
     <div class="design">
       <h2><span class="chip chip-a">A</span> The Scoreboard</h2>
       <div class="sub">Your stats up top, one big bet button, shortcuts below</div>
-      <div class="phone"><div class="clip"><iframe src="design-a.html" title="Design A mockup" loading="lazy"></iframe></div></div>
-      <a class="open" href="design-a.html" target="_blank" rel="noopener">Open Design A full screen ↗</a>
+      <div class="phone"><div class="clip"><iframe src="/survey/design-a.html" title="Design A mockup" loading="lazy"></iframe></div></div>
+      <a class="open" href="/survey/design-a.html" target="_blank" rel="noopener">Open Design A full screen ↗</a>
     </div>
     <div class="design">
       <h2><span class="chip chip-b">B</span> The Launchpad</h2>
       <div class="sub">Clean and simple — big buttons for the stuff you do most</div>
-      <div class="phone"><div class="clip"><iframe src="design-b.html" title="Design B mockup" loading="lazy"></iframe></div></div>
-      <a class="open" href="design-b.html" target="_blank" rel="noopener">Open Design B full screen ↗</a>
+      <div class="phone"><div class="clip"><iframe src="/survey/design-b.html" title="Design B mockup" loading="lazy"></iframe></div></div>
+      <a class="open" href="/survey/design-b.html" target="_blank" rel="noopener">Open Design B full screen ↗</a>
     </div>
     <div class="design">
       <h2><span class="chip chip-c">C</span> The Dashboard</h2>
       <div class="sub">Everything at a glance — trends, live bets, and crew action</div>
-      <div class="phone"><div class="clip"><iframe src="design-c.html" title="Design C mockup" loading="lazy"></iframe></div></div>
-      <a class="open" href="design-c.html" target="_blank" rel="noopener">Open Design C full screen ↗</a>
+      <div class="phone"><div class="clip"><iframe src="/survey/design-c.html" title="Design C mockup" loading="lazy"></iframe></div></div>
+      <a class="open" href="/survey/design-c.html" target="_blank" rel="noopener">Open Design C full screen ↗</a>
     </div>
   </section>
 
@@ -217,7 +217,7 @@
       body: JSON.stringify(payload)
     }).then(function(r){
       if (!r.ok) throw new Error('HTTP ' + r.status);
-      window.location.href = 'thanks.html';
+      window.location.href = '/survey/thanks.html';
     }).catch(function(){
       err.style.display = 'block';
       btn.disabled = false;
