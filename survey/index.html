@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<title>Stevo — Home Screen Survey</title>
+<link rel="icon" href="../stevo-logo.png" type="image/png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#0b0d12; --panel:#141720; --panel2:#1a1e2a; --line:#262b3a;
+    --text:#eef1f7; --muted:#9aa3b5; --green:#2fd575; --green-dk:#16a34a;
+    --purple:#8b5cf6; --amber:#fbbf24; --red:#ef4444;
+  }
+  *{margin:0;padding:0;box-sizing:border-box}
+  body{background:var(--bg);color:var(--text);font-family:'Inter',-apple-system,BlinkMacSystemFont,sans-serif;line-height:1.55}
+  h1,h2,h3,.brand{font-family:'Chakra Petch',sans-serif}
+  .wrap{max-width:1280px;margin:0 auto;padding:24px 20px 80px}
+  header{display:flex;align-items:center;gap:12px;padding:8px 0 28px}
+  header img{width:42px;height:42px;border-radius:10px}
+  .brand{font-size:22px;font-weight:700;letter-spacing:.06em}
+  .hero{text-align:center;max-width:720px;margin:0 auto 40px}
+  .hero h1{font-size:clamp(26px,4vw,38px);line-height:1.15;margin-bottom:14px}
+  .hero h1 span{color:var(--green)}
+  .hero p{color:var(--muted);font-size:16px}
+  .hero .steps{display:flex;gap:18px;justify-content:center;margin-top:22px;flex-wrap:wrap}
+  .hero .step{display:flex;align-items:center;gap:8px;font-size:14px;color:var(--muted)}
+  .hero .step b{display:inline-flex;align-items:center;justify-content:center;width:24px;height:24px;border-radius:50%;background:var(--green);color:#06210f;font-size:13px}
+  .designs{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:28px;justify-items:center;margin-bottom:56px}
+  @media(max-width:1020px){.designs{grid-template-columns:1fr;gap:44px}}
+  .design h2{display:flex;align-items:center;gap:10px;font-size:18px;margin-bottom:4px}
+  .design .chip{display:inline-flex;align-items:center;justify-content:center;width:30px;height:30px;border-radius:8px;font-size:15px;font-weight:700}
+  .chip-a{background:rgba(47,213,117,.15);color:var(--green);border:1px solid rgba(47,213,117,.4)}
+  .chip-b{background:rgba(139,92,246,.15);color:var(--purple);border:1px solid rgba(139,92,246,.4)}
+  .chip-c{background:rgba(251,191,36,.15);color:var(--amber);border:1px solid rgba(251,191,36,.4)}
+  .design .sub{color:var(--muted);font-size:13.5px;margin-bottom:12px}
+  .phone{width:min(412px,96vw);height:740px;border-radius:34px;border:1px solid var(--line);background:#000;padding:10px;box-shadow:0 24px 60px rgba(0,0,0,.5)}
+  .phone .clip{width:100%;height:100%;border-radius:26px;overflow:hidden;background:#0b0d12}
+  .phone iframe{width:calc(100% + 16px);height:calc(100% + 16px);border:0;background:#0b0d12}
+  .design .open{display:inline-block;margin-top:12px;color:var(--muted);font-size:13.5px;text-decoration:none;border-bottom:1px dotted var(--muted)}
+  .design .open:hover{color:var(--green);border-color:var(--green)}
+  .scrollhint{text-align:center;color:var(--muted);font-size:13.5px;margin:-34px 0 44px}
+  form{max-width:720px;margin:0 auto;background:var(--panel);border:1px solid var(--line);border-radius:20px;padding:34px 30px}
+  @media(max-width:560px){form{padding:26px 18px}}
+  form h2{font-size:24px;margin-bottom:6px}
+  form>.formsub{color:var(--muted);font-size:14.5px;margin-bottom:28px}
+  .q{margin-bottom:28px}
+  .q label.qlabel,.q .qlabel{display:block;font-weight:600;font-size:15.5px;margin-bottom:10px}
+  .q .req{color:var(--green)}
+  .q .opt{color:var(--muted);font-weight:400;font-size:13px}
+  .choices{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+  @media(max-width:560px){.choices{grid-template-columns:1fr}}
+  .choice input{position:absolute;opacity:0;pointer-events:none}
+  .choice span{display:flex;align-items:center;justify-content:center;gap:8px;padding:13px 10px;border:1px solid var(--line);border-radius:12px;background:var(--panel2);cursor:pointer;font-size:14.5px;font-weight:500;transition:.15s}
+  .choice span:hover{border-color:#3a4156}
+  .choice input:checked+span{border-color:var(--green);background:rgba(47,213,117,.1);color:var(--green)}
+  .choice input:focus-visible+span{outline:2px solid var(--green);outline-offset:2px}
+  textarea,input[type=text],select{width:100%;background:var(--panel2);border:1px solid var(--line);border-radius:12px;color:var(--text);padding:12px 14px;font:inherit;font-size:14.5px}
+  textarea{min-height:96px;resize:vertical}
+  textarea:focus,input[type=text]:focus,select:focus{outline:none;border-color:var(--green)}
+  select{appearance:none;background-image:url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%239aa3b5' stroke-width='2' fill='none'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 14px center}
+  button[type=submit]{width:100%;padding:16px;border:0;border-radius:14px;background:linear-gradient(135deg,var(--green),var(--green-dk));color:#06210f;font-family:'Chakra Petch',sans-serif;font-size:17px;font-weight:700;letter-spacing:.03em;cursor:pointer;transition:.15s}
+  button[type=submit]:hover{filter:brightness(1.08);transform:translateY(-1px)}
+  .fineprint{text-align:center;color:var(--muted);font-size:12.5px;margin-top:16px}
+  footer{text-align:center;color:#5d6478;font-size:12.5px;margin-top:60px}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header>
+    <img src="../stevo-logo.png" alt="Stevo logo">
+    <div class="brand">STEVO</div>
+  </header>
+
+  <section class="hero">
+    <h1>Help us pick Stevo's <span>home screen</span></h1>
+    <p>We mocked up three versions of the first screen you'd see when opening Stevo — the app for tracking friendly bets with your crew. Take a look at all three, then answer a few quick questions. Takes about 2 minutes.</p>
+    <div class="steps">
+      <div class="step"><b>1</b> Check out all 3 designs</div>
+      <div class="step"><b>2</b> Scroll inside each phone</div>
+      <div class="step"><b>3</b> Answer the questions below</div>
+    </div>
+  </section>
+
+  <section class="designs">
+    <div class="design">
+      <h2><span class="chip chip-a">A</span> The Scoreboard</h2>
+      <div class="sub">Your stats up top, one big bet button, shortcuts below</div>
+      <div class="phone"><div class="clip"><iframe src="design-a.html" title="Design A mockup" loading="lazy"></iframe></div></div>
+      <a class="open" href="design-a.html" target="_blank" rel="noopener">Open Design A full screen ↗</a>
+    </div>
+    <div class="design">
+      <h2><span class="chip chip-b">B</span> The Launchpad</h2>
+      <div class="sub">Clean and simple — big buttons for the stuff you do most</div>
+      <div class="phone"><div class="clip"><iframe src="design-b.html" title="Design B mockup" loading="lazy"></iframe></div></div>
+      <a class="open" href="design-b.html" target="_blank" rel="noopener">Open Design B full screen ↗</a>
+    </div>
+    <div class="design">
+      <h2><span class="chip chip-c">C</span> The Dashboard</h2>
+      <div class="sub">Everything at a glance — trends, live bets, and crew action</div>
+      <div class="phone"><div class="clip"><iframe src="design-c.html" title="Design C mockup" loading="lazy"></iframe></div></div>
+      <a class="open" href="design-c.html" target="_blank" rel="noopener">Open Design C full screen ↗</a>
+    </div>
+  </section>
+
+  <p class="scrollhint">Tip: the phones scroll — drag inside each one to see the whole screen.</p>
+
+  <form name="mockup-survey" method="POST" action="/survey/thanks.html" data-netlify="true" netlify-honeypot="bot-field">
+    <input type="hidden" name="form-name" value="mockup-survey">
+    <p style="display:none"><label>Don't fill this out: <input name="bot-field"></label></p>
+
+    <h2>The survey</h2>
+    <p class="formsub">There are no wrong answers — honest and blunt beats polite.</p>
+
+    <div class="q">
+      <span class="qlabel">1. Which design do you like best overall? <span class="req">*</span></span>
+      <div class="choices">
+        <label class="choice"><input type="radio" name="favorite" value="A — The Scoreboard" required><span>A · Scoreboard</span></label>
+        <label class="choice"><input type="radio" name="favorite" value="B — The Launchpad"><span>B · Launchpad</span></label>
+        <label class="choice"><input type="radio" name="favorite" value="C — The Dashboard"><span>C · Dashboard</span></label>
+      </div>
+    </div>
+
+    <div class="q">
+      <label class="qlabel" for="favorite_why">2. What made you pick that one? <span class="req">*</span></label>
+      <textarea id="favorite_why" name="favorite_why" required placeholder="The look? The layout? Something specific that stood out?"></textarea>
+    </div>
+
+    <div class="q">
+      <span class="qlabel">3. Imagine you just opened the app to make a quick bet with a friend. Which design makes that feel easiest? <span class="req">*</span></span>
+      <div class="choices">
+        <label class="choice"><input type="radio" name="easiest_to_use" value="A — The Scoreboard" required><span>A · Scoreboard</span></label>
+        <label class="choice"><input type="radio" name="easiest_to_use" value="B — The Launchpad"><span>B · Launchpad</span></label>
+        <label class="choice"><input type="radio" name="easiest_to_use" value="C — The Dashboard"><span>C · Dashboard</span></label>
+      </div>
+    </div>
+
+    <div class="q">
+      <span class="qlabel">4. Stevo tracks who owes who. Which design do you trust most with that? <span class="req">*</span></span>
+      <div class="choices">
+        <label class="choice"><input type="radio" name="most_trustworthy" value="A — The Scoreboard" required><span>A · Scoreboard</span></label>
+        <label class="choice"><input type="radio" name="most_trustworthy" value="B — The Launchpad"><span>B · Launchpad</span></label>
+        <label class="choice"><input type="radio" name="most_trustworthy" value="C — The Dashboard"><span>C · Dashboard</span></label>
+      </div>
+    </div>
+
+    <div class="q">
+      <label class="qlabel" for="least_favorite">5. Which one is your <em>least</em> favorite, and what turns you off about it? <span class="opt">(optional)</span></label>
+      <textarea id="least_favorite" name="least_favorite" placeholder="e.g. &quot;C feels cluttered&quot; or &quot;B looks empty&quot;"></textarea>
+    </div>
+
+    <div class="q">
+      <label class="qlabel" for="confusing_missing">6. Was anything confusing, or is something missing you'd expect on a home screen? <span class="opt">(optional)</span></label>
+      <textarea id="confusing_missing" name="confusing_missing" placeholder="Anything that made you go &quot;huh?&quot; or &quot;where's the...&quot;"></textarea>
+    </div>
+
+    <div class="q">
+      <span class="qlabel">7. How often do you make casual bets with friends (games, golf, poker night, etc.)?</span>
+      <select name="bet_frequency">
+        <option value="">Pick one…</option>
+        <option>All the time — weekly or more</option>
+        <option>Pretty often — a few times a month</option>
+        <option>Occasionally — a few times a year</option>
+        <option>Rarely or never</option>
+      </select>
+    </div>
+
+    <div class="q">
+      <label class="qlabel" for="respondent">8. Your name <span class="opt">(optional — helps us follow up)</span></label>
+      <input type="text" id="respondent" name="respondent" placeholder="First name is fine">
+    </div>
+
+    <button type="submit">Submit my picks</button>
+    <p class="fineprint">Answers go straight to the Stevo team. No account, no spam.</p>
+  </form>
+
+  <footer>© 2026 Stevo App LLC · <a href="/" style="color:inherit">stevoapp.com</a></footer>
+</div>
+</body>
+</html>
