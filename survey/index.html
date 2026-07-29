@@ -109,9 +109,8 @@
 
   <p class="scrollhint">Tip: the phones scroll — drag inside each one to see the whole screen.</p>
 
-  <form name="mockup-survey" method="POST" action="/survey/thanks.html" data-netlify="true" netlify-honeypot="bot-field">
-    <input type="hidden" name="form-name" value="mockup-survey">
-    <p style="display:none"><label>Don't fill this out: <input name="bot-field"></label></p>
+  <form id="survey-form">
+    <p style="display:none"><label>Don't fill this out: <input name="bot-field" tabindex="-1" autocomplete="off"></label></p>
 
     <h2>The survey</h2>
     <p class="formsub">There are no wrong answers — honest and blunt beats polite.</p>
@@ -174,11 +173,58 @@
       <input type="text" id="respondent" name="respondent" placeholder="First name is fine">
     </div>
 
-    <button type="submit">Submit my picks</button>
+    <button type="submit" id="submit-btn">Submit my picks</button>
+    <p class="fineprint" id="form-error" style="display:none;color:#ef4444">Something went wrong sending your answers — please try again.</p>
     <p class="fineprint">Answers go straight to the Stevo team. No account, no spam.</p>
   </form>
 
   <footer>© 2026 Stevo App LLC · <a href="/" style="color:inherit">stevoapp.com</a></footer>
 </div>
+<script>
+(function(){
+  var SB_URL = 'https://sztatmknjyzzyzngvpff.supabase.co/rest/v1/stevo_survey_responses';
+  var SB_KEY = 'sb_publishable_GvPXZ8AVgix3aZ2UDS0YRQ_ktlLvMtB';
+  var form = document.getElementById('survey-form');
+  form.addEventListener('submit', function(e){
+    e.preventDefault();
+    if (form.elements['bot-field'].value) return; // honeypot
+    var btn = document.getElementById('submit-btn');
+    var err = document.getElementById('form-error');
+    err.style.display = 'none';
+    btn.disabled = true;
+    btn.textContent = 'Sending…';
+    var fd = new FormData(form);
+    var val = function(k){ var v = fd.get(k); return v && String(v).trim() ? String(v).trim() : null; };
+    var payload = {
+      favorite: val('favorite'),
+      favorite_why: val('favorite_why'),
+      easiest_to_use: val('easiest_to_use'),
+      most_trustworthy: val('most_trustworthy'),
+      least_favorite: val('least_favorite'),
+      confusing_missing: val('confusing_missing'),
+      bet_frequency: val('bet_frequency'),
+      respondent: val('respondent'),
+      user_agent: navigator.userAgent.slice(0, 300)
+    };
+    fetch(SB_URL, {
+      method: 'POST',
+      headers: {
+        'apikey': SB_KEY,
+        'Authorization': 'Bearer ' + SB_KEY,
+        'Content-Type': 'application/json',
+        'Prefer': 'return=minimal'
+      },
+      body: JSON.stringify(payload)
+    }).then(function(r){
+      if (!r.ok) throw new Error('HTTP ' + r.status);
+      window.location.href = 'thanks.html';
+    }).catch(function(){
+      err.style.display = 'block';
+      btn.disabled = false;
+      btn.textContent = 'Submit my picks';
+    });
+  });
+})();
+</script>
 </body>
 </html>
