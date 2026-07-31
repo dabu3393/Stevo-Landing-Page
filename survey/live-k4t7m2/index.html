@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>Stevo Survey — Live Results</title>
+<link rel="icon" href="/stevo-logo.png" type="image/png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#0b0d12; --panel:#141720; --panel2:#1a1e2a; --line:#262b3a;
+    --text:#eef1f7; --muted:#9aa3b5; --green:#2fd575; --purple:#8b5cf6; --amber:#fbbf24;
+  }
+  *{margin:0;padding:0;box-sizing:border-box}
+  body{background:var(--bg);color:var(--text);font-family:'Inter',-apple-system,sans-serif;line-height:1.5}
+  h1,h2,.brand{font-family:'Chakra Petch',sans-serif}
+  .wrap{max-width:860px;margin:0 auto;padding:24px 18px 80px}
+  header{display:flex;align-items:center;gap:12px;padding:4px 0 20px}
+  header img{width:38px;height:38px;border-radius:9px}
+  .brand{font-size:19px;font-weight:700;letter-spacing:.06em}
+  .brand small{color:var(--muted);font-weight:500;font-size:12px;display:block;letter-spacing:.02em}
+  .toolbar{display:flex;align-items:center;gap:12px;margin-left:auto}
+  .stamp{color:var(--muted);font-size:12px;text-align:right}
+  button#refresh{background:var(--panel2);border:1px solid var(--line);color:var(--text);border-radius:10px;padding:8px 14px;font:inherit;font-size:13px;cursor:pointer}
+  button#refresh:hover{border-color:var(--green);color:var(--green)}
+  .bignums{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:22px}
+  .bignum{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:16px;text-align:center}
+  .bignum .n{font-size:34px;font-weight:800;font-family:'Chakra Petch',sans-serif}
+  .bignum .l{color:var(--muted);font-size:12.5px}
+  .bignum .n.green{color:var(--green)}
+  .card{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:18px;margin-bottom:18px}
+  .card h2{font-size:15px;letter-spacing:.03em;border-bottom:2px solid var(--green);padding-bottom:8px;margin-bottom:14px}
+  .bar-row{display:grid;grid-template-columns:130px 1fr 34px;gap:10px;align-items:center;margin-bottom:8px;font-size:13.5px}
+  .bar-row .lbl{color:var(--muted)}
+  .track{background:var(--panel2);border-radius:6px;height:22px;overflow:hidden}
+  .fill{height:100%;border-radius:6px;transition:width .5s}
+  .fill.a{background:var(--green)} .fill.b{background:var(--purple)} .fill.c{background:var(--amber)}
+  .cnt{font-weight:700;text-align:right}
+  .subhead{color:var(--muted);font-size:12px;margin:14px 0 8px;text-transform:uppercase;letter-spacing:.06em}
+  .kv{display:flex;justify-content:space-between;font-size:13.5px;padding:5px 0;border-bottom:1px solid var(--panel2)}
+  .kv:last-child{border-bottom:0}
+  .kv b{margin-left:16px;white-space:nowrap}
+  .resp{border:1px solid var(--line);border-radius:12px;padding:14px 16px;margin-bottom:12px;background:var(--panel2)}
+  .resp .who{font-weight:700;font-size:14.5px}
+  .resp .when{color:var(--muted);font-weight:400;font-size:12px}
+  .resp .row{font-size:13px;margin-top:5px}
+  .resp .row span{color:var(--muted)}
+  .fav-A{color:var(--green)} .fav-B{color:var(--purple)} .fav-C{color:var(--amber)}
+  #status{color:var(--muted);font-size:13px;padding:30px;text-align:center}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <img src="/stevo-logo.png" alt="Stevo logo">
+    <div class="brand">STEVO<small>Survey · Live Results</small></div>
+    <div class="toolbar">
+      <div class="stamp" id="stamp">loading…</div>
+      <button id="refresh">Refresh</button>
+    </div>
+  </header>
+
+  <div id="status">Loading results…</div>
+
+  <div id="content" style="display:none">
+    <div class="bignums">
+      <div class="bignum"><div class="n" id="n-total">–</div><div class="l">total responses</div></div>
+      <div class="bignum"><div class="n green" id="n-fresh">–</div><div class="l">in last 24 hours</div></div>
+    </div>
+
+    <div class="card"><h2>FAVORITE OVERALL</h2><div id="bars-fav"></div></div>
+    <div class="card"><h2>EASIEST TO USE</h2><div id="bars-easy"></div></div>
+    <div class="card"><h2>MOST TRUSTWORTHY WITH MONEY</h2><div id="bars-trust"></div></div>
+
+    <div class="card">
+      <h2>COLOR SCHEME</h2>
+      <div id="colors"></div>
+      <div class="subhead">"What would look better" write-ins</div>
+      <div id="color-writeins" style="font-size:13px;color:var(--muted)"></div>
+    </div>
+
+    <div class="card"><h2>HOW OFTEN THEY BET</h2><div id="freq"></div></div>
+
+    <div class="card"><h2 id="resp-head">ALL RESPONSES</h2><div id="responses"></div></div>
+  </div>
+</div>
+
+<script>
+(function(){
+  var RPC = 'https://sztatmknjyzzyzngvpff.supabase.co/rest/v1/rpc/stevo_survey_results';
+  var ANON = 'sb_publishable_GvPXZ8AVgix3aZ2UDS0YRQ_ktlLvMtB';
+  var KEY = 'svk_2b8e51c7a9d4f6031e7c8a25';
+  var NAMES = {A: 'A · Scoreboard', B: 'B · Launchpad', C: 'C · Dashboard'};
+
+  function esc(s){ var d=document.createElement('div'); d.textContent = s == null ? '' : String(s); return d.innerHTML; }
+  function letter(v){ return (v||'').charAt(0); }
+
+  function bars(el, rows, field){
+    var t = {A:0,B:0,C:0};
+    rows.forEach(function(r){ var l = letter(r[field]); if (l in t) t[l]++; });
+    var max = Math.max(t.A, t.B, t.C, 1);
+    el.innerHTML = ['A','B','C'].map(function(k){
+      return '<div class="bar-row"><div class="lbl">'+NAMES[k]+'</div>'+
+        '<div class="track"><div class="fill '+k.toLowerCase()+'" style="width:'+(t[k]/max*100)+'%"></div></div>'+
+        '<div class="cnt">'+t[k]+'</div></div>';
+    }).join('');
+  }
+
+  function counts(el, rows, field){
+    var m = {};
+    rows.forEach(function(r){ if (r[field]) m[r[field]] = (m[r[field]]||0)+1; });
+    var entries = Object.keys(m).map(function(k){ return [k, m[k]]; }).sort(function(a,b){ return b[1]-a[1]; });
+    el.innerHTML = entries.length
+      ? entries.map(function(e){ return '<div class="kv"><span>'+esc(e[0])+'</span><b>'+e[1]+'</b></div>'; }).join('')
+      : '<div class="kv"><span style="color:var(--muted)">No answers yet</span></div>';
+  }
+
+  function fmtWhen(iso){
+    return new Date(iso).toLocaleString('en-US', {timeZone:'America/Denver', month:'short', day:'numeric', hour:'numeric', minute:'2-digit'});
+  }
+
+  function respCard(r){
+    var who = r.respondent ? esc(r.respondent) : 'Anonymous';
+    var l = letter(r.favorite);
+    function row(label, val){ return val ? '<div class="row"><span>'+label+':</span> '+esc(val)+'</div>' : ''; }
+    return '<div class="resp">'+
+      '<div class="who">'+who+' <span class="when">· '+fmtWhen(r.created_at)+'</span></div>'+
+      '<div class="row"><span>Favorite:</span> <b class="fav-'+l+'">'+esc(r.favorite||'—')+'</b></div>'+
+      row('Why', r.favorite_why)+
+      row('Easiest', r.easiest_to_use)+
+      row('Most trustworthy', r.most_trustworthy)+
+      row('Color scheme', r.color_scheme)+
+      row('Would look better', r.color_scheme_better)+
+      row('Least favorite', r.least_favorite)+
+      row('Confusing / missing', r.confusing_missing)+
+      row('Bets', r.bet_frequency)+
+      '</div>';
+  }
+
+  function render(rows){
+    var now = Date.now();
+    var fresh = rows.filter(function(r){ return now - new Date(r.created_at).getTime() < 24*3600*1000; });
+    document.getElementById('n-total').textContent = rows.length;
+    document.getElementById('n-fresh').textContent = '+' + fresh.length;
+    bars(document.getElementById('bars-fav'), rows, 'favorite');
+    bars(document.getElementById('bars-easy'), rows, 'easiest_to_use');
+    bars(document.getElementById('bars-trust'), rows, 'most_trustworthy');
+    counts(document.getElementById('colors'), rows, 'color_scheme');
+    var writeins = rows.filter(function(r){ return r.color_scheme_better; })
+      .map(function(r){ return '“' + esc(r.color_scheme_better) + '”' + (r.respondent ? ' — ' + esc(r.respondent) : ''); });
+    document.getElementById('color-writeins').innerHTML = writeins.length ? writeins.join('<br>') : 'None yet';
+    counts(document.getElementById('freq'), rows, 'bet_frequency');
+    document.getElementById('resp-head').textContent = 'ALL RESPONSES (' + rows.length + ')';
+    document.getElementById('responses').innerHTML = rows.map(respCard).join('');
+    document.getElementById('status').style.display = 'none';
+    document.getElementById('content').style.display = 'block';
+    document.getElementById('stamp').textContent = 'updated ' + new Date().toLocaleTimeString('en-US', {hour:'numeric', minute:'2-digit', second:'2-digit'});
+  }
+
+  function load(){
+    fetch(RPC, {
+      method: 'POST',
+      headers: {apikey: ANON, Authorization: 'Bearer '+ANON, 'Content-Type': 'application/json'},
+      body: JSON.stringify({view_key: KEY})
+    }).then(function(r){
+      if (!r.ok) throw new Error('HTTP '+r.status);
+      return r.json();
+    }).then(render).catch(function(e){
+      document.getElementById('status').style.display = 'block';
+      document.getElementById('status').textContent = 'Could not load results ('+e.message+'). Retrying shortly…';
+    });
+  }
+
+  document.getElementById('refresh').addEventListener('click', load);
+  load();
+  setInterval(load, 60000);
+})();
+</script>
+</body>
+</html>
