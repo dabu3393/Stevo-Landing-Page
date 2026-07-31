@@ -52,6 +52,9 @@
   .tag.B{background:rgba(139,92,246,.15);color:var(--purple)}
   .tag.C{background:rgba(251,191,36,.15);color:var(--amber)}
   .quote .none{color:var(--muted)}
+  .consensus p{font-size:13.5px;margin-bottom:12px;color:#c9d1e0}
+  .consensus p b{color:var(--text)}
+  .consensus .asof{color:var(--muted);font-size:12px;margin:14px 0 0;border-top:1px solid var(--panel2);padding-top:10px}
 </style>
 </head>
 <body>
@@ -86,9 +89,18 @@
 
     <div class="card"><h2>HOW OFTEN THEY BET</h2><div id="freq"></div></div>
 
-    <div class="card"><h2>WHY PEOPLE CHOSE THEIR FAVORITE</h2><div id="cm-why" class="quotes"></div></div>
-    <div class="card"><h2>LEAST FAVORITE — IN THEIR WORDS</h2><div id="cm-least" class="quotes"></div></div>
-    <div class="card"><h2>CONFUSING, MISSING & FEATURE IDEAS</h2><div id="cm-missing" class="quotes"></div></div>
+    <div class="card">
+      <h2>CONSENSUS SO FAR</h2>
+      <div class="consensus">
+        <p><b>The big theme: keep it simple.</b> Nearly every comment, across all camps, comes back to clean layouts and quick-glance info. Scoreboard voters like that it sits "in the middle" — not too cluttered, not too bare — with today's bets and a big Make-a-bet button front and center. Launchpad voters want a high-level home screen they can dive deeper from, and several called it the cleanest and easiest to follow.</p>
+        <p><b>The Dashboard is losing the room.</b> It has a loyal minority who love the trend graph and having everything on one page, but it's the most-named least favorite by a wide margin — "too busy," "too much going on," "too much of a statistics look" — and after 16 responses, not one person has called it easiest to use.</p>
+        <p><b>One caution on the Scoreboard:</b> a couple of people don't love that the money up/down amount is the very first thing on screen — they want that info available, just not leading. Worth considering a subtler placement or a tap-to-reveal.</p>
+        <p><b>Color scheme:</b> the dark theme is safe — most either love it or don't care. A couple would like an optional light mode; nobody prefers light overall.</p>
+        <p><b>Most-requested features:</b> golf support keeps coming up (skins games, score tracking with course, date and notes), followed by a visible betting record / running totals (cash balance, won-lost by month and year), and a search function. One respondent tracks friend IOUs in a phone note — exactly the Settle feature, suggesting it deserves more prominence.</p>
+        <p><b>Positioning note:</b> at least one person initially thought the app was for sharing sportsbook bets rather than tracking bets between friends — the "friendly bets with your crew" message needs to hit harder.</p>
+        <p class="asof">Written summary as of July 30 (16 responses) — the numbers above update live; this text is refreshed periodically.</p>
+      </div>
+    </div>
   </div>
 </div>
 
@@ -126,18 +138,6 @@
     return new Date(iso).toLocaleString('en-US', {timeZone:'America/Denver', month:'short', day:'numeric', hour:'numeric', minute:'2-digit'});
   }
 
-  // Pooled anonymous quotes for one free-text field, tagged with the voter's favorite design
-  function quotes(el, rows, field){
-    var items = rows.filter(function(r){ return r[field] && String(r[field]).trim(); })
-      .sort(function(a, b){ return (letter(a.favorite) || 'Z').localeCompare(letter(b.favorite) || 'Z'); });
-    el.innerHTML = items.length
-      ? items.map(function(r){
-          var l = letter(r.favorite) || '–';
-          return '<div class="quote"><span class="tag '+l+'" title="This person\'s favorite design">'+l+'</span><span>“'+esc(String(r[field]).trim())+'”</span></div>';
-        }).join('')
-      : '<div class="quote"><span class="none">Nothing written in yet</span></div>';
-  }
-
   function render(rows){
     var now = Date.now();
     var fresh = rows.filter(function(r){ return now - new Date(r.created_at).getTime() < 24*3600*1000; });
@@ -151,9 +151,6 @@
       .map(function(r){ return '“' + esc(r.color_scheme_better) + '”'; });
     document.getElementById('color-writeins').innerHTML = writeins.length ? writeins.join('<br>') : 'None yet';
     counts(document.getElementById('freq'), rows, 'bet_frequency');
-    quotes(document.getElementById('cm-why'), rows, 'favorite_why');
-    quotes(document.getElementById('cm-least'), rows, 'least_favorite');
-    quotes(document.getElementById('cm-missing'), rows, 'confusing_missing');
     document.getElementById('status').style.display = 'none';
     document.getElementById('content').style.display = 'block';
     document.getElementById('stamp').textContent = 'updated ' + new Date().toLocaleTimeString('en-US', {hour:'numeric', minute:'2-digit', second:'2-digit'});
