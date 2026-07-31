@@ -43,13 +43,15 @@
   .kv{display:flex;justify-content:space-between;font-size:13.5px;padding:5px 0;border-bottom:1px solid var(--panel2)}
   .kv:last-child{border-bottom:0}
   .kv b{margin-left:16px;white-space:nowrap}
-  .resp{border:1px solid var(--line);border-radius:12px;padding:14px 16px;margin-bottom:12px;background:var(--panel2)}
-  .resp .who{font-weight:700;font-size:14.5px}
-  .resp .when{color:var(--muted);font-weight:400;font-size:12px}
-  .resp .row{font-size:13px;margin-top:5px}
-  .resp .row span{color:var(--muted)}
   .fav-A{color:var(--green)} .fav-B{color:var(--purple)} .fav-C{color:var(--amber)}
   #status{color:var(--muted);font-size:13px;padding:30px;text-align:center}
+  .quote{display:flex;gap:10px;align-items:flex-start;padding:9px 0;border-bottom:1px solid var(--panel2);font-size:13.5px}
+  .quote:last-child{border-bottom:0}
+  .tag{flex:0 0 auto;display:inline-flex;align-items:center;justify-content:center;width:22px;height:22px;border-radius:6px;font-size:12px;font-weight:700;font-family:'Chakra Petch',sans-serif}
+  .tag.A{background:rgba(47,213,117,.15);color:var(--green)}
+  .tag.B{background:rgba(139,92,246,.15);color:var(--purple)}
+  .tag.C{background:rgba(251,191,36,.15);color:var(--amber)}
+  .quote .none{color:var(--muted)}
 </style>
 </head>
 <body>
@@ -84,7 +86,9 @@
 
     <div class="card"><h2>HOW OFTEN THEY BET</h2><div id="freq"></div></div>
 
-    <div class="card"><h2 id="resp-head">ALL RESPONSES</h2><div id="responses"></div></div>
+    <div class="card"><h2>WHY PEOPLE CHOSE THEIR FAVORITE</h2><div id="cm-why" class="quotes"></div></div>
+    <div class="card"><h2>LEAST FAVORITE — IN THEIR WORDS</h2><div id="cm-least" class="quotes"></div></div>
+    <div class="card"><h2>CONFUSING, MISSING & FEATURE IDEAS</h2><div id="cm-missing" class="quotes"></div></div>
   </div>
 </div>
 
@@ -122,22 +126,15 @@
     return new Date(iso).toLocaleString('en-US', {timeZone:'America/Denver', month:'short', day:'numeric', hour:'numeric', minute:'2-digit'});
   }
 
-  function respCard(r){
-    var who = r.respondent ? esc(r.respondent) : 'Anonymous';
-    var l = letter(r.favorite);
-    function row(label, val){ return val ? '<div class="row"><span>'+label+':</span> '+esc(val)+'</div>' : ''; }
-    return '<div class="resp">'+
-      '<div class="who">'+who+' <span class="when">· '+fmtWhen(r.created_at)+'</span></div>'+
-      '<div class="row"><span>Favorite:</span> <b class="fav-'+l+'">'+esc(r.favorite||'—')+'</b></div>'+
-      row('Why', r.favorite_why)+
-      row('Easiest', r.easiest_to_use)+
-      row('Most trustworthy', r.most_trustworthy)+
-      row('Color scheme', r.color_scheme)+
-      row('Would look better', r.color_scheme_better)+
-      row('Least favorite', r.least_favorite)+
-      row('Confusing / missing', r.confusing_missing)+
-      row('Bets', r.bet_frequency)+
-      '</div>';
+  // Pooled anonymous quotes for one free-text field, tagged with the voter's favorite design
+  function quotes(el, rows, field){
+    var items = rows.filter(function(r){ return r[field] && String(r[field]).trim(); });
+    el.innerHTML = items.length
+      ? items.map(function(r){
+          var l = letter(r.favorite) || '–';
+          return '<div class="quote"><span class="tag '+l+'" title="This person\'s favorite design">'+l+'</span><span>“'+esc(String(r[field]).trim())+'”</span></div>';
+        }).join('')
+      : '<div class="quote"><span class="none">Nothing written in yet</span></div>';
   }
 
   function render(rows){
@@ -150,11 +147,12 @@
     bars(document.getElementById('bars-trust'), rows, 'most_trustworthy');
     counts(document.getElementById('colors'), rows, 'color_scheme');
     var writeins = rows.filter(function(r){ return r.color_scheme_better; })
-      .map(function(r){ return '“' + esc(r.color_scheme_better) + '”' + (r.respondent ? ' — ' + esc(r.respondent) : ''); });
+      .map(function(r){ return '“' + esc(r.color_scheme_better) + '”'; });
     document.getElementById('color-writeins').innerHTML = writeins.length ? writeins.join('<br>') : 'None yet';
     counts(document.getElementById('freq'), rows, 'bet_frequency');
-    document.getElementById('resp-head').textContent = 'ALL RESPONSES (' + rows.length + ')';
-    document.getElementById('responses').innerHTML = rows.map(respCard).join('');
+    quotes(document.getElementById('cm-why'), rows, 'favorite_why');
+    quotes(document.getElementById('cm-least'), rows, 'least_favorite');
+    quotes(document.getElementById('cm-missing'), rows, 'confusing_missing');
     document.getElementById('status').style.display = 'none';
     document.getElementById('content').style.display = 'block';
     document.getElementById('stamp').textContent = 'updated ' + new Date().toLocaleTimeString('en-US', {hour:'numeric', minute:'2-digit', second:'2-digit'});
