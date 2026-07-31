@@ -128,7 +128,8 @@
 
   // Pooled anonymous quotes for one free-text field, tagged with the voter's favorite design
   function quotes(el, rows, field){
-    var items = rows.filter(function(r){ return r[field] && String(r[field]).trim(); });
+    var items = rows.filter(function(r){ return r[field] && String(r[field]).trim(); })
+      .sort(function(a, b){ return (letter(a.favorite) || 'Z').localeCompare(letter(b.favorite) || 'Z'); });
     el.innerHTML = items.length
       ? items.map(function(r){
           var l = letter(r.favorite) || '–';
