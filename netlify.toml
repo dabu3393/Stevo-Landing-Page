@@ -1,3 +1,20 @@
 [build]
   functions = "netlify/functions"
   publish = "."
+
+# Apple requires the association file served as JSON with no redirect.
+[[headers]]
+  for = "/.well-known/apple-app-site-association"
+  [headers.values]
+    Content-Type = "application/json"
+
+# Invite deep-link landing pages resolve to a single static page each,
+# reading the id/code from the URL (client-side).
+[[redirects]]
+  from = "/invite/poker/*"
+  to = "/invite/poker/index.html"
+  status = 200
+[[redirects]]
+  from = "/invite/friend/*"
+  to = "/invite/friend/index.html"
+  status = 200

@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Poker game invite on Stevo</title>
+  <style>
+    :root { --bg:#0B0B0F; --card:#131318; --text:#F2F2F5; --muted:#9A9AA8; --green:#3DDC85; --line:#22222A; }
+    * { box-sizing:border-box; }
+    body { margin:0; background:var(--bg); color:var(--text); font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Helvetica,Arial,sans-serif; min-height:100vh; display:flex; align-items:center; justify-content:center; padding:24px; }
+    .card { width:100%; max-width:420px; background:var(--card); border:1px solid var(--line); border-radius:20px; padding:32px 28px; text-align:center; }
+    .logo { width:64px; height:64px; border-radius:16px; margin-bottom:20px; }
+    h1 { font-size:24px; font-weight:800; margin:0 0 8px; }
+    p { color:var(--muted); font-size:15px; line-height:22px; margin:0 0 20px; }
+    .btn { display:block; background:var(--green); color:#0B0B0F; font-size:16px; font-weight:700; text-decoration:none; padding:15px; border-radius:12px; margin-bottom:12px; }
+    .btn-secondary { display:block; color:var(--muted); font-size:14px; font-weight:600; text-decoration:none; padding:10px; }
+    .hint { font-size:13px; color:#6A6A78; line-height:19px; margin:16px 0 0; }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <img class="logo" src="/stevo-logo.png" alt="Stevo" />
+    <h1>You're invited to a poker game on Stevo</h1>
+    <p>Track buy-ins, rebuys, and settle up — join the game.</p>
+    <a class="btn" href="https://testflight.apple.com/join/RpchYrJc">Get Stevo</a>
+    <a class="btn-secondary" id="openApp" href="#" style="display:none">Already have Stevo? Open it</a>
+    <p class="hint">New here? Install Stevo, then <strong>tap this invite link again</strong> to join the game.</p>
+  </div>
+  <script>
+    // Path: /invite/poker/<gameId>  (+ ?inviter=<uid>)
+    var m = location.pathname.match(/\/invite\/poker\/([^\/?#]+)/);
+    var gameId = m ? m[1] : null;
+    var inviter = new URLSearchParams(location.search).get('inviter');
+    if (gameId) {
+      var url = 'stevo://invite/poker/' + encodeURIComponent(gameId);
+      if (inviter) url += '?inviter=' + encodeURIComponent(inviter);
+      var open = document.getElementById('openApp');
+      open.href = url;
+      open.style.display = 'block';
+    }
+  </script>
+</body>
+</html>
